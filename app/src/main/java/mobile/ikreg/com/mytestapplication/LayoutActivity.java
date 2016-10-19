@@ -1,0 +1,75 @@
+package mobile.ikreg.com.mytestapplication;
+
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
+
+import mobile.ikreg.com.mytestapplication.Database.MemoryDataSource;
+
+public class LayoutActivity extends AppCompatActivity {
+
+    MemoryDataSource dataSource = new MemoryDataSource(this);
+    public static final String LOG_TAG = LayoutActivity.class.getSimpleName();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_layout);
+
+        DatePopup setDate = new DatePopup(LayoutActivity.this, (EditText)findViewById(R.id.editDate), (LinearLayout)findViewById(R.id.layoutDate));
+        TimePopup setTime = new TimePopup(LayoutActivity.this, (EditText)findViewById(R.id.editTime), (LinearLayout)findViewById(R.id.layoutTime));
+    }
+
+    private void onButtonPressed() {
+        Button saveButton = (Button)findViewById(R.id.buttonSave);
+        final EditText editDate = (EditText)findViewById(R.id.editDate);
+        final EditText editTime = (EditText)findViewById(R.id.editTime);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String dateString = editDate.getText().toString();
+                String timeString = editTime.getText().toString();
+
+                if(TextUtils.isEmpty(dateString)) {
+                    editDate.setError("Required");
+                    return;
+                }
+                if(TextUtils.isEmpty(timeString)) {
+                    editTime.setError("Required");
+                    return;
+                }
+
+                dataSource.createShoppingMemo(dateString, timeString);
+                startActivity(new Intent(LayoutActivity.this, Main2Activity.class));
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.i(LOG_TAG, "Die Datenquelle im Add wird geöffnet.");
+        dataSource.open();
+        onButtonPressed();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Log.i(LOG_TAG, "Die Datenquelle wird im Add geschlossen.");
+        dataSource.close();
+    }
+}

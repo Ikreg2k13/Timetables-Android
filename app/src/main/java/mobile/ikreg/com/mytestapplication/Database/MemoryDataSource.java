@@ -14,7 +14,9 @@ public class MemoryDataSource {
 
     private SQLiteDatabase database;
     private MemoryHelper dbHelper;
-    private String[] columns = {MemoryHelper.COLUMN_ID, MemoryHelper.COLUMN_PRODUCT, MemoryHelper.COLUMN_QUANTITY};
+    private String[] columns = {MemoryHelper.COLUMN_ID, MemoryHelper.COLUMN_DATE, MemoryHelper.COLUMN_TIME,
+                                MemoryHelper.COLUMN_COURSE, MemoryHelper.COLUMN_ROOM, MemoryHelper.COLUMN_LENGTH,
+                                MemoryHelper.COLUMN_NOTIFIC, MemoryHelper.COLUMN_NOTES};
 
 
     public MemoryDataSource(Context context) {
@@ -33,34 +35,49 @@ public class MemoryDataSource {
         Log.i(LOG_TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public ExamMemory createShoppingMemo(String product, String quantity) {
+    public ExamMemory createShoppingMemo(String date, String time, String course, long room, long length, String notific, String notes) {
         ContentValues values = new ContentValues();
-        values.put(MemoryHelper.COLUMN_PRODUCT, product);
-        values.put(MemoryHelper.COLUMN_QUANTITY, quantity);
+        values.put(MemoryHelper.COLUMN_DATE, date);
+        values.put(MemoryHelper.COLUMN_TIME, time);
+        values.put(MemoryHelper.COLUMN_COURSE, course);
+        values.put(MemoryHelper.COLUMN_ROOM, room);
+        values.put(MemoryHelper.COLUMN_LENGTH, length);
+        values.put(MemoryHelper.COLUMN_NOTIFIC, notific);
+        values.put(MemoryHelper.COLUMN_NOTES, notes);
 
-        long insertId = database.insert(MemoryHelper.TABLE_SHOPPING_LIST, null, values);
+        long insertId = database.insert(MemoryHelper.TABLE_EXAM_LIST, null, values);
 
-        Cursor cursor = database.query(MemoryHelper.TABLE_SHOPPING_LIST,
+        Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
                 columns, MemoryHelper.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
         cursor.moveToFirst();
-        ExamMemory shoppingMemo = cursorToShoppingMemo(cursor);
+        ExamMemory examMemo = cursorToExamMemo(cursor);
         cursor.close();
 
-        return shoppingMemo;
+        return examMemo;
     }
 
-    private ExamMemory cursorToShoppingMemo(Cursor cursor) {
+    private ExamMemory cursorToExamMemo(Cursor cursor) {
         int idIndex = cursor.getColumnIndex(MemoryHelper.COLUMN_ID);
-        int idProduct = cursor.getColumnIndex(MemoryHelper.COLUMN_PRODUCT);
-        int idQuantity = cursor.getColumnIndex(MemoryHelper.COLUMN_QUANTITY);
+        int idDate = cursor.getColumnIndex(MemoryHelper.COLUMN_DATE);
+        int idTime = cursor.getColumnIndex(MemoryHelper.COLUMN_TIME);
+        int idCourse = cursor.getColumnIndex(MemoryHelper.COLUMN_COURSE);
+        int idRoom = cursor.getColumnIndex(MemoryHelper.COLUMN_ROOM);
+        int idLength = cursor.getColumnIndex(MemoryHelper.COLUMN_LENGTH);
+        int idNotific = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTIFIC);
+        int idNotes = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTES);
 
-        String product = cursor.getString(idProduct);
-        String quantity = cursor.getString(idQuantity);
+        String date = cursor.getString(idDate);
+        String time = cursor.getString(idTime);
+        String course = cursor.getString(idCourse);
+        long room = cursor.getLong(idRoom);
+        long length = cursor.getLong(idLength);
+        String notific = cursor.getString(idNotific);
+        String notes = cursor.getString(idNotes);
         long id = cursor.getLong(idIndex);
 
-        ExamMemory shoppingMemo = new ExamMemory(product, quantity, id);
+        ExamMemory shoppingMemo = new ExamMemory(date, time, course, room, length, notific, notes, id);
 
         return shoppingMemo;
     }
@@ -68,16 +85,16 @@ public class MemoryDataSource {
     public List<ExamMemory> getAllShoppingMemos() {
         List<ExamMemory> examMemoList = new ArrayList<>();
 
-        Cursor cursor = database.query(MemoryHelper.TABLE_SHOPPING_LIST,
+        Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();
-        ExamMemory shoppingMemo;
+        ExamMemory examMemo;
 
         while(!cursor.isAfterLast()) {
-            shoppingMemo = cursorToShoppingMemo(cursor);
-            examMemoList.add(shoppingMemo);
-            Log.i(LOG_TAG, "ID: " + shoppingMemo.getId() + ", Inhalt: " + shoppingMemo.toString());
+            examMemo = cursorToExamMemo(cursor);
+            examMemoList.add(examMemo);
+            Log.i(LOG_TAG, "ID: " + examMemo.getId() + ", Inhalt: " + examMemo.toString());
             cursor.moveToNext();
         }
 

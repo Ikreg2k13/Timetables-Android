@@ -116,12 +116,13 @@
                 android:text="Course"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView2" />
+                android:id="@+id/textCourse" />
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner" />
+                android:id="@+id/spinnerCourse"
+                android:textSize="20sp"/>
         </LinearLayout>
     </TableRow>
 

@@ -11,16 +11,27 @@ public class MemoryHelper extends SQLiteOpenHelper{
     public static final String DB_NAME = "data_memory.db";
     public static final int DB_VERSION = 1;
 
-    public static final String TABLE_SHOPPING_LIST = "exam_memory";
+    public static final String TABLE_EXAM_LIST = "exam_memory";
 
+    //Product equals Date
     public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_PRODUCT = "product";
-    public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_TIME = "time";
+    public static final String COLUMN_COURSE = "course";
+    public static final String COLUMN_ROOM = "room";
+    public static final String COLUMN_LENGTH = "length";
+    public static final String COLUMN_NOTIFIC = "notific";
+    public static final String COLUMN_NOTES = "notes";
 
-    public static final String SQL_CREATE = "CREATE TABLE " + TABLE_SHOPPING_LIST + "(" +
+    public static final String SQL_CREATE = "CREATE TABLE " + TABLE_EXAM_LIST + "(" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_PRODUCT + " TEXT NOT NULL, " +
-            COLUMN_QUANTITY + " TEXT NOT NULL);";
+            COLUMN_DATE + " TEXT NOT NULL, " +
+            COLUMN_TIME + " TEXT NOT NULL, " +
+            COLUMN_COURSE + " TEXT NOT NULL, " +
+            COLUMN_ROOM + " INTEGER NOT NULL, " +
+            COLUMN_LENGTH + " INTEGER NOT NULL, " +
+            COLUMN_NOTIFIC + " TEXT , " +
+            COLUMN_NOTES + " TEXT );";
 
 
     public MemoryHelper(Context context) {

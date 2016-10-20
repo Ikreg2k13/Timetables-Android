@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TableRow;
 
 import mobile.ikreg.com.mytestapplication.Database.MemoryDataSource;
@@ -27,18 +29,23 @@ public class LayoutActivity extends AppCompatActivity {
 
         DatePopup setDate = new DatePopup(LayoutActivity.this, (EditText)findViewById(R.id.editDate), (LinearLayout)findViewById(R.id.layoutDate));
         TimePopup setTime = new TimePopup(LayoutActivity.this, (EditText)findViewById(R.id.editTime), (LinearLayout)findViewById(R.id.layoutTime));
+
+        setSpinnerItems();
     }
 
     private void onButtonPressed() {
         Button saveButton = (Button)findViewById(R.id.buttonSave);
+        Button cancelButton = (Button)findViewById(R.id.buttonCancel);
         final EditText editDate = (EditText)findViewById(R.id.editDate);
         final EditText editTime = (EditText)findViewById(R.id.editTime);
+        final Spinner spinnerCourse = (Spinner)findViewById(R.id.spinnerCourse);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String dateString = editDate.getText().toString();
                 String timeString = editTime.getText().toString();
+                String courseString = spinnerCourse.getSelectedItem().toString();
 
                 if(TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
@@ -49,11 +56,31 @@ public class LayoutActivity extends AppCompatActivity {
                     return;
                 }
 
-                dataSource.createShoppingMemo(dateString, timeString);
-                startActivity(new Intent(LayoutActivity.this, Main2Activity.class));
+                dataSource.createShoppingMemo(dateString, timeString, courseString, 0, 0, null, null);
+
+                Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    public void setSpinnerItems() {
+        Spinner courseSpinner = (Spinner)findViewById(R.id.spinnerCourse);
+        String[] testArray = {"English", "German", "Maths", "Politics"};
+        ArrayAdapter<String> testAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, testArray);
+        testAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        courseSpinner.setAdapter(testAdapter);
     }
 
     @Override

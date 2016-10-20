@@ -66,12 +66,12 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     private void showAllListEntries () {
-        List<ExamMemory> shoppingMemoList = dataSource.getAllShoppingMemos();
+        List<ExamMemory> examMemoList = dataSource.getAllShoppingMemos();
 
-        ArrayAdapter<ExamMemory> shoppingMemoArrayAdapter = new ArrayAdapter<> (this, android.R.layout.simple_list_item_multiple_choice, shoppingMemoList);
+        ArrayAdapter<ExamMemory> examArrayAdapter = new ArrayAdapter<> (this, android.R.layout.simple_list_item_multiple_choice, examMemoList);
 
-        ListView shoppingMemosListView = (ListView) findViewById(R.id.list_view);
-        shoppingMemosListView.setAdapter(shoppingMemoArrayAdapter);
+        ListView listViewExams = (ListView) findViewById(R.id.list_view);
+        listViewExams.setAdapter(examArrayAdapter);
     }
 
 }

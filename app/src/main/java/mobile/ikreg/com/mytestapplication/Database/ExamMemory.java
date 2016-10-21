@@ -1,4 +1,4 @@
-package mobile.ikreg.com.mytestapplication.Database;
+package mobile.ikreg.com.mytestapplication.database;
 
 public class ExamMemory {
 

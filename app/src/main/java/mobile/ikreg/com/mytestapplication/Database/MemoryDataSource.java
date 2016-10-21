@@ -1,4 +1,4 @@
-package mobile.ikreg.com.mytestapplication.Database;
+package mobile.ikreg.com.mytestapplication.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

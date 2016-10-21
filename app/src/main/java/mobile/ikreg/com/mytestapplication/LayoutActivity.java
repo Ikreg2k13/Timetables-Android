@@ -6,16 +6,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TableRow;
 
-import mobile.ikreg.com.mytestapplication.Database.MemoryDataSource;
+import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
 
 public class LayoutActivity extends AppCompatActivity {
 
@@ -39,6 +36,8 @@ public class LayoutActivity extends AppCompatActivity {
         final EditText editDate = (EditText)findViewById(R.id.editDate);
         final EditText editTime = (EditText)findViewById(R.id.editTime);
         final Spinner spinnerCourse = (Spinner)findViewById(R.id.spinnerCourse);
+        final EditText editRoom = (EditText)findViewById(R.id.editRoom);
+        final EditText editLength = (EditText)findViewById(R.id.editLength);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +45,8 @@ public class LayoutActivity extends AppCompatActivity {
                 String dateString = editDate.getText().toString();
                 String timeString = editTime.getText().toString();
                 String courseString = spinnerCourse.getSelectedItem().toString();
+                long  roomLong = Long.parseLong(editRoom.getText().toString());
+                long  lengthLong = Long.parseLong(editLength.getText().toString());
 
                 if(TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
@@ -56,7 +57,7 @@ public class LayoutActivity extends AppCompatActivity {
                     return;
                 }
 
-                dataSource.createShoppingMemo(dateString, timeString, courseString, 0, 0, null, null);
+                dataSource.createShoppingMemo(dateString, timeString, courseString, roomLong, lengthLong, null, null);
 
                 Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

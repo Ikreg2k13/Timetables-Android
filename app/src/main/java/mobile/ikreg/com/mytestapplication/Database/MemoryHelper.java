@@ -25,7 +25,7 @@ public class MemoryHelper extends SQLiteOpenHelper{
 
     public static final String SQL_CREATE = "CREATE TABLE " + TABLE_EXAM_LIST + "(" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_DATE + " TEXT NOT NULL, " +
+            COLUMN_DATE + " INTEGER NOT NULL, " +
             COLUMN_TIME + " TEXT NOT NULL, " +
             COLUMN_COURSE + " TEXT NOT NULL, " +
             COLUMN_ROOM + " INTEGER NOT NULL, " +

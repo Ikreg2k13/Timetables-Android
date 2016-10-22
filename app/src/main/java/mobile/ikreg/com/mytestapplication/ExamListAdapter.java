@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
+import mobile.ikreg.com.mytestapplication.util.DateHelper;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
 
+    Calendar c = Calendar.getInstance(TimeZone.getDefault());
     private Context context;
     private List<ExamMemory> examList;
     private int layoutResourceId;
@@ -42,10 +46,12 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
         //TextView length = (TextView)convertView.findViewById(R.id.exam_list_length);
         //TextView fromlesson = (TextView)convertView.findViewById(R.id.exam_list_fromlesson);
 
+
+
         course.setText(this.examList.get(position).getCourse());
-        date.setText(this.examList.get(position).getDate());
+        date.setText(ParseHelper.parseLongDateToString(this.examList.get(position).getDate()));
         time.setText(this.examList.get(position).getTime());
-        //daysleft.setText(this.examList.get(position).getTime());
+        daysleft.setText(DateHelper.getDaysLeft(c.getTimeInMillis(),this.examList.get(position).getDate()));
         room.setText("R " + ParseHelper.parseLongToString(3, this.examList.get(position).getRoom()));
         //length.setText(ParseHelper.parseLongToString(3, this.examList.get(position).getLength()));
         //fromlesson.setText(this.examList.get(position).getTime());

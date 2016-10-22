@@ -35,7 +35,7 @@ public class MemoryDataSource {
         Log.i(LOG_TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public ExamMemory createShoppingMemo(String date, String time, String course, long room, long length, String notific, String notes) {
+    public ExamMemory createShoppingMemo(long date, String time, String course, long room, long length, String notific, String notes) {
         ContentValues values = new ContentValues();
         values.put(MemoryHelper.COLUMN_DATE, date);
         values.put(MemoryHelper.COLUMN_TIME, time);
@@ -68,7 +68,7 @@ public class MemoryDataSource {
         int idNotific = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTIFIC);
         int idNotes = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTES);
 
-        String date = cursor.getString(idDate);
+        long date = cursor.getLong(idDate);
         String time = cursor.getString(idTime);
         String course = cursor.getString(idCourse);
         long room = cursor.getLong(idRoom);

@@ -13,6 +13,8 @@ import java.util.List;
 
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
+import mobile.ikreg.com.mytestapplication.util.DateHelper;
+import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -46,7 +48,6 @@ public class Main2Activity extends AppCompatActivity {
                 startActivity(new Intent(Main2Activity.this, LayoutActivity.class));
             }
         });
-
     }
 
     @Override

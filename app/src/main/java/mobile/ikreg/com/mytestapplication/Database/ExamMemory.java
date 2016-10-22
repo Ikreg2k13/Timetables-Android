@@ -2,7 +2,7 @@ package mobile.ikreg.com.mytestapplication.database;
 
 public class ExamMemory {
 
-    private String date;
+    private long date;
     private String time;
     private String course;
     private long room;
@@ -12,7 +12,7 @@ public class ExamMemory {
     private long id;
 
 
-    public ExamMemory(String date, String time, String course, long room, long length, String notific, String notes, long id) {
+    public ExamMemory(long date, String time, String course, long room, long length, String notific, String notes, long id) {
         this.date = date;
         this.time = time;
         this.course = course;
@@ -24,10 +24,10 @@ public class ExamMemory {
     }
 
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

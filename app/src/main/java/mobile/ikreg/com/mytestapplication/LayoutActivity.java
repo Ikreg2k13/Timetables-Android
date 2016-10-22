@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
+import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class LayoutActivity extends AppCompatActivity {
 
@@ -57,7 +58,9 @@ public class LayoutActivity extends AppCompatActivity {
                     return;
                 }
 
-                dataSource.createShoppingMemo(dateString, timeString, courseString, roomLong, lengthLong, null, null);
+                long dateLong = ParseHelper.parseDateStringToLong(dateString);
+
+                dataSource.createShoppingMemo(dateLong, timeString, courseString, roomLong, lengthLong, null, null);
 
                 Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,12 +1,10 @@
 package mobile.ikreg.com.mytestapplication;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,13 +16,13 @@ import android.widget.Spinner;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
+import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class LayoutActivity extends AppCompatActivity {
 
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-    MemoryDataSource dataSource = new MemoryDataSource(this);
+    ExamDataSource dataSource = new ExamDataSource(this);
     public static final String LOG_TAG = LayoutActivity.class.getSimpleName();
 
     @Override
@@ -59,7 +57,8 @@ public class LayoutActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
                     return;
-                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis()) {
+                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
+                        !DateUtils.isToday(ParseHelper.parseDateStringToLong(editDate.getText().toString()))) {
                     editDate.setError("Required");
                     //Snackbar.make(view, "Date set is invalid!", Snackbar.LENGTH_LONG).setAction("Action", null);
                     //editDate.setText(ParseHelper.parseLongDateToString(calendar.getTimeInMillis()));

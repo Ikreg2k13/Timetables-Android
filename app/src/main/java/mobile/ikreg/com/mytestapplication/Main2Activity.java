@@ -14,11 +14,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
-import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
+import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
+import mobile.ikreg.com.mytestapplication.util.DateHelper;
 
 public class Main2Activity extends AppCompatActivity {
 
-    private MemoryDataSource dataSource = new MemoryDataSource(this);
+    private ExamDataSource dataSource = new ExamDataSource(this);
     public static final String LOG_TAG = Main2Activity.class.getSimpleName();
 
     @Override
@@ -69,6 +70,8 @@ public class Main2Activity extends AppCompatActivity {
 
     private void showAllListEntries () {
         List<ExamMemory> examMemoList = dataSource.getAllShoppingMemos();
+
+        DateHelper.deleteDbDateExpired(examMemoList, dataSource);
 
         Collections.sort(examMemoList, new Comparator<ExamMemory>() {
             @Override

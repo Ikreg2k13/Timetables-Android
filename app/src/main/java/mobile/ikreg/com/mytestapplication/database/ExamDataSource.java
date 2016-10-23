@@ -8,9 +8,9 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemoryDataSource {
+public class ExamDataSource {
 
-    private static final String LOG_TAG = MemoryDataSource.class.getSimpleName();
+    private static final String LOG_TAG = ExamDataSource.class.getSimpleName();
 
     private SQLiteDatabase database;
     private MemoryHelper dbHelper;
@@ -19,7 +19,7 @@ public class MemoryDataSource {
                                 MemoryHelper.COLUMN_NOTIFIC, MemoryHelper.COLUMN_NOTES};
 
 
-    public MemoryDataSource(Context context) {
+    public ExamDataSource(Context context) {
         Log.i(LOG_TAG, "Die DataSource erzeugt jetzt den dbHelper.");
         dbHelper = new MemoryHelper(context);
     }
@@ -101,5 +101,11 @@ public class MemoryDataSource {
         cursor.close();
 
         return examMemoList;
+    }
+
+    public void deleteExam(ExamMemory exam) {
+        long id = exam.getId();
+
+        database.delete(MemoryHelper.TABLE_EXAM_LIST, MemoryHelper.COLUMN_ID + "=" + id, null);
     }
 }

@@ -1,6 +1,9 @@
 package mobile.ikreg.com.mytestapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,11 +15,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class LayoutActivity extends AppCompatActivity {
 
+    Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
     MemoryDataSource dataSource = new MemoryDataSource(this);
     public static final String LOG_TAG = LayoutActivity.class.getSimpleName();
 
@@ -46,13 +53,19 @@ public class LayoutActivity extends AppCompatActivity {
                 String dateString = editDate.getText().toString();
                 String timeString = editTime.getText().toString();
                 String courseString = spinnerCourse.getSelectedItem().toString();
-                long  roomLong = Long.parseLong(editRoom.getText().toString());
-                long  lengthLong = Long.parseLong(editLength.getText().toString());
+                long roomLong = Long.parseLong(editRoom.getText().toString());
+                long lengthLong = Long.parseLong(editLength.getText().toString());
 
-                if(TextUtils.isEmpty(dateString)) {
+                if (TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
                     return;
-                }
+                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis()) {
+                    editDate.setError("Required");
+                    //Snackbar.make(view, "Date set is invalid!", Snackbar.LENGTH_LONG).setAction("Action", null);
+                    //editDate.setText(ParseHelper.parseLongDateToString(calendar.getTimeInMillis()));
+                    return;
+                    }
+
                 if(TextUtils.isEmpty(timeString)) {
                     editTime.setError("Required");
                     return;
@@ -70,6 +83,7 @@ public class LayoutActivity extends AppCompatActivity {
         });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

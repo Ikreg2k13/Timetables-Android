@@ -16,6 +16,7 @@ public class DateHelper {
         if(timeLeft > 14) {
             return " - in " + timeLeft / 7 + " weeks";
         }
+        else if (!DateUtils.isToday(goalDate) && timeLeft <= 0 )  return " - tomorrow";
         else if (DateUtils.isToday(goalDate)) return " - today";
         else return " - in " + timeLeft + " days";
     }

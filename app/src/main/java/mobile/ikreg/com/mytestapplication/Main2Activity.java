@@ -9,12 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 import mobile.ikreg.com.mytestapplication.database.MemoryDataSource;
-import mobile.ikreg.com.mytestapplication.util.DateHelper;
-import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -69,6 +69,13 @@ public class Main2Activity extends AppCompatActivity {
 
     private void showAllListEntries () {
         List<ExamMemory> examMemoList = dataSource.getAllShoppingMemos();
+
+        Collections.sort(examMemoList, new Comparator<ExamMemory>() {
+            @Override
+            public int compare(final ExamMemory object1, final ExamMemory object2) {
+                return object1.getDate() < object2.getDate() ? -1 : object1.getDate() > object2.getDate() ? 1 : 0;
+            }
+        });
 
         ExamListAdapter examArrayAdapter = new ExamListAdapter(this, R.layout.exam_list_layout, examMemoList);
 

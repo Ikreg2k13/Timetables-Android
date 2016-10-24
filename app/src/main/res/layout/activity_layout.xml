@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="mobile.ikreg.com.mytestapplication.LayoutActivity"
+    tools:context="mobile.ikreg.com.mytestapplication.ExamAddActivity"
     android:baselineAligned="false"
     android:weightSum="8.5">
 

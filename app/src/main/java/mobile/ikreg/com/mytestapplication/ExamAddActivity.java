@@ -17,21 +17,23 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
+import mobile.ikreg.com.mytestapplication.util.DatePopup;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
+import mobile.ikreg.com.mytestapplication.util.TimePopup;
 
-public class LayoutActivity extends AppCompatActivity {
+public class ExamAddActivity extends AppCompatActivity {
 
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
     ExamDataSource dataSource = new ExamDataSource(this);
-    public static final String LOG_TAG = LayoutActivity.class.getSimpleName();
+    public static final String LOG_TAG = ExamAddActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
 
-        DatePopup setDate = new DatePopup(LayoutActivity.this, (EditText)findViewById(R.id.editDate), (LinearLayout)findViewById(R.id.layoutDate));
-        TimePopup setTime = new TimePopup(LayoutActivity.this, (EditText)findViewById(R.id.editTime), (LinearLayout)findViewById(R.id.layoutTime));
+        DatePopup setDate = new DatePopup(ExamAddActivity.this, (EditText)findViewById(R.id.editDate), (LinearLayout)findViewById(R.id.layoutDate));
+        TimePopup setTime = new TimePopup(ExamAddActivity.this, (EditText)findViewById(R.id.editTime), (LinearLayout)findViewById(R.id.layoutTime));
 
         setSpinnerItems();
     }
@@ -74,7 +76,7 @@ public class LayoutActivity extends AppCompatActivity {
 
                 dataSource.createShoppingMemo(dateLong, timeString, courseString, roomLong, lengthLong, null, null);
 
-                Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
+                Intent intent = new Intent(ExamAddActivity.this, ExamListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
@@ -84,7 +86,7 @@ public class LayoutActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LayoutActivity.this, Main2Activity.class);
+                Intent intent = new Intent(ExamAddActivity.this, ExamListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();

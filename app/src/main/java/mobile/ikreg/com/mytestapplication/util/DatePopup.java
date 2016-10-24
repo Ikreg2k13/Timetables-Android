@@ -1,4 +1,4 @@
-package mobile.ikreg.com.mytestapplication;
+package mobile.ikreg.com.mytestapplication.util;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;

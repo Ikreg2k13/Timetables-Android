@@ -1,4 +1,4 @@
-package mobile.ikreg.com.mytestapplication;
+package mobile.ikreg.com.mytestapplication.util;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import mobile.ikreg.com.mytestapplication.R;
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 import mobile.ikreg.com.mytestapplication.util.DateHelper;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;

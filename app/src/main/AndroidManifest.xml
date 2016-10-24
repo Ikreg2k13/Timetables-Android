@@ -24,14 +24,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Main2Activity"
+            android:name=".ExamListActivity"
             android:label="@string/title_activity_main2"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LayoutActivity"
+            android:name=".ExamAddActivity"
             android:theme="@style/AppTheme"
-            android:parentActivityName=".Main2Activity"
+            android:parentActivityName=".ExamListActivity"
             android:label="Add Exam" />
     </application>
 

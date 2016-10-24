@@ -8,6 +8,8 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobile.ikreg.com.mytestapplication.util.DateHelper;
+
 public class ExamDataSource {
 
     private static final String LOG_TAG = ExamDataSource.class.getSimpleName();
@@ -82,7 +84,7 @@ public class ExamDataSource {
         return shoppingMemo;
     }
 
-    public List<ExamMemory> getAllShoppingMemos() {
+    public List<ExamMemory> getActiveExamMemos() {
         List<ExamMemory> examMemoList = new ArrayList<>();
 
         Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
@@ -99,6 +101,8 @@ public class ExamDataSource {
         }
 
         cursor.close();
+
+        DateHelper.deleteDbDateExpired(examMemoList, this);
 
         return examMemoList;
     }

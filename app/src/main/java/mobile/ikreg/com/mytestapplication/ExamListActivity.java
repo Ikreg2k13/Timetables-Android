@@ -15,12 +15,12 @@ import java.util.List;
 
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
-import mobile.ikreg.com.mytestapplication.util.DateHelper;
+import mobile.ikreg.com.mytestapplication.util.ExamListAdapter;
 
-public class Main2Activity extends AppCompatActivity {
+public class ExamListActivity extends AppCompatActivity {
 
     private ExamDataSource dataSource = new ExamDataSource(this);
-    public static final String LOG_TAG = Main2Activity.class.getSimpleName();
+    public static final String LOG_TAG = ExamListActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class Main2Activity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Main2Activity.this, LayoutActivity.class));
+                startActivity(new Intent(ExamListActivity.this, ExamAddActivity.class));
             }
         });
     }
@@ -69,9 +69,8 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     private void showAllListEntries () {
-        List<ExamMemory> examMemoList = dataSource.getAllShoppingMemos();
 
-        DateHelper.deleteDbDateExpired(examMemoList, dataSource);
+        List<ExamMemory> examMemoList = dataSource.getActiveExamMemos();
 
         Collections.sort(examMemoList, new Comparator<ExamMemory>() {
             @Override

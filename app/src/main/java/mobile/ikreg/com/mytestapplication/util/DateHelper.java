@@ -4,6 +4,7 @@ package mobile.ikreg.com.mytestapplication.util;
 import android.text.format.DateUtils;
 
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -31,9 +32,15 @@ public class DateHelper {
     }
 
     public static void deleteDbDateExpired(List<ExamMemory> examList, ExamDataSource dataSource) {
+        Iterator<ExamMemory> iter = examList.iterator();
 
-        for(int i = 0; i < examList.size(); i++) {
-            if(!DateUtils.isToday(examList.get(i).getDate()) && examList.get(i).getDate() < calendar.getTimeInMillis()) dataSource.deleteExam(examList.get(i));
+        while(iter.hasNext()) {
+            ExamMemory e = iter.next();
+
+            if(!DateUtils.isToday(e.getDate()) && e.getDate() < calendar.getTimeInMillis()) {
+                dataSource.deleteExam(e);
+                iter.remove();
+            }
         }
     }
 }

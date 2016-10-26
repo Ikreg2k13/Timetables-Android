@@ -25,7 +25,7 @@ public class ExamListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_examlist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -79,7 +79,7 @@ public class ExamListActivity extends AppCompatActivity {
             }
         });
 
-        ExamListAdapter examArrayAdapter = new ExamListAdapter(this, R.layout.exam_list_layout, examMemoList);
+        ExamListAdapter examArrayAdapter = new ExamListAdapter(this, R.layout.adapter_examlist, examMemoList);
 
         ListView listViewExams = (ListView) findViewById(R.id.list_view);
         listViewExams.setAdapter(examArrayAdapter);

@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
+import mobile.ikreg.com.mytestapplication.util.AddExamSpinnerAdapter;
 import mobile.ikreg.com.mytestapplication.util.DatePopup;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 import mobile.ikreg.com.mytestapplication.util.TimePopup;
@@ -30,7 +31,7 @@ public class ExamAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout);
+        setContentView(R.layout.activity_addexam);
 
         DatePopup setDate = new DatePopup(ExamAddActivity.this, (EditText)findViewById(R.id.editDate), (LinearLayout)findViewById(R.id.layoutDate));
         TimePopup setTime = new TimePopup(ExamAddActivity.this, (EditText)findViewById(R.id.editTime), (LinearLayout)findViewById(R.id.layoutTime));
@@ -96,9 +97,9 @@ public class ExamAddActivity extends AppCompatActivity {
 
     public void setSpinnerItems() {
         Spinner courseSpinner = (Spinner)findViewById(R.id.spinnerCourse);
-        String[] testArray = {"English", "German", "Maths", "Politics"};
-        ArrayAdapter<String> testAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, testArray);
-        testAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        String[] testArray = {"English", "German", "Maths", "Politics", "Add Course"};
+        ArrayAdapter<String> testAdapter = new AddExamSpinnerAdapter(this, R.layout.adapter_coursespinner, testArray);
+        testAdapter.setDropDownViewResource(R.layout.adapter_coursespinner);
         courseSpinner.setAdapter(testAdapter);
     }
 

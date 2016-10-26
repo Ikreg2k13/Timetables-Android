@@ -13,8 +13,6 @@ import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.R;
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
-import mobile.ikreg.com.mytestapplication.util.DateHelper;
-import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
 
@@ -36,7 +34,7 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
 
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.exam_list_layout, parent, false);
+            convertView = inflater.inflate(R.layout.adapter_examlist, parent, false);
         }
 
         TextView course = (TextView)convertView.findViewById(R.id.exam_list_course);

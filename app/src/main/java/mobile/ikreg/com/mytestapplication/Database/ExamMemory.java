@@ -10,9 +10,10 @@ public class ExamMemory {
     private String notific;
     private String notes;
     private long id;
+    private long hasExpired;
 
 
-    public ExamMemory(long date, String time, String course, long room, long length, String notific, String notes, long id) {
+    public ExamMemory(long date, String time, String course, long room, long length, String notific, String notes, long expired, long id) {
         this.date = date;
         this.time = time;
         this.course = course;
@@ -20,6 +21,7 @@ public class ExamMemory {
         this.length = length;
         this.notific = notific;
         this.notes = notes;
+        this.hasExpired = expired;
         this.id = id;
     }
 
@@ -60,10 +62,13 @@ public class ExamMemory {
         this.id = id;
     }
 
+    public long getExpired() { return hasExpired; }
+    public void setExpired() { this.hasExpired = 1; }
+
 
     @Override
     public String toString() {
-        String output = date + ", " + time + ", " + course;
+        String output = date + ", " + time + ", " + course + ", " + hasExpired;
 
         return output;
     }

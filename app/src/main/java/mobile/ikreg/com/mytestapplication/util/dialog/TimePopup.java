@@ -1,4 +1,4 @@
-package mobile.ikreg.com.mytestapplication.util;
+package mobile.ikreg.com.mytestapplication.util.dialog;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;

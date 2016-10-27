@@ -18,7 +18,7 @@ public class ExamDataSource {
     private MemoryHelper dbHelper;
     private String[] columns = {MemoryHelper.COLUMN_ID, MemoryHelper.COLUMN_DATE, MemoryHelper.COLUMN_TIME,
                                 MemoryHelper.COLUMN_COURSE, MemoryHelper.COLUMN_ROOM, MemoryHelper.COLUMN_LENGTH,
-                                MemoryHelper.COLUMN_NOTIFIC, MemoryHelper.COLUMN_NOTES};
+                                MemoryHelper.COLUMN_NOTIFIC, MemoryHelper.COLUMN_NOTES, MemoryHelper.COLUMN_EXPIRED};
 
 
     public ExamDataSource(Context context) {
@@ -37,7 +37,7 @@ public class ExamDataSource {
         Log.i(LOG_TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public ExamMemory createShoppingMemo(long date, String time, String course, long room, long length, String notific, String notes) {
+    public ExamMemory createShoppingMemo(long date, String time, String course, long room, long length, String notific, String notes, long expired) {
         ContentValues values = new ContentValues();
         values.put(MemoryHelper.COLUMN_DATE, date);
         values.put(MemoryHelper.COLUMN_TIME, time);
@@ -46,6 +46,7 @@ public class ExamDataSource {
         values.put(MemoryHelper.COLUMN_LENGTH, length);
         values.put(MemoryHelper.COLUMN_NOTIFIC, notific);
         values.put(MemoryHelper.COLUMN_NOTES, notes);
+        values.put(MemoryHelper.COLUMN_EXPIRED, expired);
 
         long insertId = database.insert(MemoryHelper.TABLE_EXAM_LIST, null, values);
 
@@ -69,6 +70,7 @@ public class ExamDataSource {
         int idLength = cursor.getColumnIndex(MemoryHelper.COLUMN_LENGTH);
         int idNotific = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTIFIC);
         int idNotes = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTES);
+        int idExpired = cursor.getColumnIndex(MemoryHelper.COLUMN_EXPIRED);
 
         long date = cursor.getLong(idDate);
         String time = cursor.getString(idTime);
@@ -77,9 +79,10 @@ public class ExamDataSource {
         long length = cursor.getLong(idLength);
         String notific = cursor.getString(idNotific);
         String notes = cursor.getString(idNotes);
+        long expired = cursor.getLong(idExpired);
         long id = cursor.getLong(idIndex);
 
-        ExamMemory shoppingMemo = new ExamMemory(date, time, course, room, length, notific, notes, id);
+        ExamMemory shoppingMemo = new ExamMemory(date, time, course, room, length, notific, notes, expired, id);
 
         return shoppingMemo;
     }
@@ -102,8 +105,6 @@ public class ExamDataSource {
 
         cursor.close();
 
-        DateHelper.deleteDbDateExpired(examMemoList, this);
-
         return examMemoList;
     }
 
@@ -111,5 +112,32 @@ public class ExamDataSource {
         long id = exam.getId();
 
         database.delete(MemoryHelper.TABLE_EXAM_LIST, MemoryHelper.COLUMN_ID + "=" + id, null);
+    }
+
+    public ExamMemory updateExamMemory(long id, long date, String time, String course, long room, long length, String notific, String notes, long expired) {
+        ContentValues values = new ContentValues();
+        values.put(MemoryHelper.COLUMN_DATE, date);
+        values.put(MemoryHelper.COLUMN_TIME, time);
+        values.put(MemoryHelper.COLUMN_COURSE, course);
+        values.put(MemoryHelper.COLUMN_ROOM, room);
+        values.put(MemoryHelper.COLUMN_LENGTH, length);
+        values.put(MemoryHelper.COLUMN_NOTIFIC, notific);
+        values.put(MemoryHelper.COLUMN_NOTES, notes);
+        values.put(MemoryHelper.COLUMN_EXPIRED, expired);
+
+        database.update(MemoryHelper.TABLE_EXAM_LIST,
+                values,
+                MemoryHelper.COLUMN_ID + "=" + id,
+                null);
+
+        Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
+                columns, MemoryHelper.COLUMN_ID + "=" + id,
+                null, null, null, null);
+
+        cursor.moveToFirst();
+        ExamMemory examMemo = cursorToExamMemo(cursor);
+        cursor.close();
+
+        return examMemo;
     }
 }

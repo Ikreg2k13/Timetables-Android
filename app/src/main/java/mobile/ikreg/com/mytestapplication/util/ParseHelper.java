@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.lang.Integer;
+
+import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 
 public class ParseHelper {
 
@@ -61,5 +64,18 @@ public class ParseHelper {
         String timeString = new SimpleDateFormat("hh:mm a", Locale.US).format(new Date(timeLong));
 
         return timeString;
+    }
+
+    public static boolean getExpirationBool(ExamMemory exam) {
+        Long e = exam.getExpired();
+        Integer i = e.intValue();
+        boolean b = false;
+        switch(i) {
+            case 0: b = false;
+            break;
+            case 1: b = true;
+            break;
+        }
+        return b;
     }
 }

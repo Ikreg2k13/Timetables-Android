@@ -22,6 +22,7 @@ public class MemoryHelper extends SQLiteOpenHelper{
     public static final String COLUMN_LENGTH = "length";
     public static final String COLUMN_NOTIFIC = "notific";
     public static final String COLUMN_NOTES = "notes";
+    public static final String COLUMN_EXPIRED = "expired";
 
     public static final String SQL_CREATE = "CREATE TABLE " + TABLE_EXAM_LIST + "(" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -31,7 +32,8 @@ public class MemoryHelper extends SQLiteOpenHelper{
             COLUMN_ROOM + " INTEGER NOT NULL, " +
             COLUMN_LENGTH + " INTEGER NOT NULL, " +
             COLUMN_NOTIFIC + " TEXT , " +
-            COLUMN_NOTES + " TEXT );";
+            COLUMN_NOTES + " TEXT , " +
+            COLUMN_EXPIRED + " INTEGER " + ")";
 
 
     public MemoryHelper(Context context) {

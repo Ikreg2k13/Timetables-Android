@@ -26,21 +26,25 @@ public class DateHelper {
         if(timeLeft > 14) {
             return " - in " + timeLeft / 7 + " weeks";
         }
-        else if (!DateUtils.isToday(goalDate) && timeLeft <= 0 )  return " - tomorrow";
+        else if (!DateUtils.isToday(goalDate) && timeLeft <= 1 && timeLeft >= 0)  return " - tomorrow";
         else if (DateUtils.isToday(goalDate)) return " - today";
-        else return " - in " + timeLeft + " days";
+        else if (timeLeft < 0) return " - expired";
+        else return " - in " + timeLeft + 1 +" days";
     }
 
-    public static void deleteDbDateExpired(List<ExamMemory> examList, ExamDataSource dataSource) {
-        Iterator<ExamMemory> iter = examList.iterator();
+    public static void deleteDate(ExamMemory date, List<ExamMemory> examList, ExamDataSource dataSource) {
+                examList.remove(date);
+                dataSource.deleteExam(date);
+    }
+
+    public static ExamMemory getDateExpired(List<ExamMemory> list) {
+        Iterator<ExamMemory> iter = list.iterator();
 
         while(iter.hasNext()) {
             ExamMemory e = iter.next();
 
-            if(!DateUtils.isToday(e.getDate()) && e.getDate() < calendar.getTimeInMillis()) {
-                dataSource.deleteExam(e);
-                iter.remove();
-            }
+            if(!DateUtils.isToday(e.getDate()) && e.getDate() < calendar.getTimeInMillis() && !ParseHelper.getExpirationBool(e)) return e;
         }
+        return null;
     }
 }

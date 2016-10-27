@@ -18,9 +18,9 @@ import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
 import mobile.ikreg.com.mytestapplication.util.AddExamSpinnerAdapter;
-import mobile.ikreg.com.mytestapplication.util.DatePopup;
+import mobile.ikreg.com.mytestapplication.util.dialog.DatePopup;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
-import mobile.ikreg.com.mytestapplication.util.TimePopup;
+import mobile.ikreg.com.mytestapplication.util.dialog.TimePopup;
 
 public class ExamAddActivity extends AppCompatActivity {
 
@@ -60,12 +60,12 @@ public class ExamAddActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
                     return;
-                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
-                        !DateUtils.isToday(ParseHelper.parseDateStringToLong(editDate.getText().toString()))) {
-                    editDate.setError("Required");
+//                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
+//                        !DateUtils.isToday(ParseHelper.parseDateStringToLong(editDate.getText().toString()))) {
+//                    editDate.setError("Required");
                     //Snackbar.make(view, "Date set is invalid!", Snackbar.LENGTH_LONG).setAction("Action", null);
                     //editDate.setText(ParseHelper.parseLongDateToString(calendar.getTimeInMillis()));
-                    return;
+//                    return;
                     }
 
                 if(TextUtils.isEmpty(timeString)) {
@@ -75,7 +75,7 @@ public class ExamAddActivity extends AppCompatActivity {
 
                 long dateLong = ParseHelper.parseDateStringToLong(dateString);
 
-                dataSource.createShoppingMemo(dateLong, timeString, courseString, roomLong, lengthLong, null, null);
+                dataSource.createShoppingMemo(dateLong, timeString, courseString, roomLong, lengthLong, null, null, 0);
 
                 Intent intent = new Intent(ExamAddActivity.this, ExamListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

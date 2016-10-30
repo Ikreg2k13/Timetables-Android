@@ -65,6 +65,11 @@ public class ExamMemory {
     public long getExpired() { return hasExpired; }
     public void setExpired() { this.hasExpired = 1; }
 
+    public ExamMemory getExamAtPosition() {
+
+        return null;
+    }
+
 
     @Override
     public String toString() {

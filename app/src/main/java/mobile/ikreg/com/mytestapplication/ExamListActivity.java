@@ -1,17 +1,31 @@
 package mobile.ikreg.com.mytestapplication;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,18 +48,47 @@ public class ExamListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Log.i(LOG_TAG, "Die Datenquelle wird geöffnet.");
-        //dataSource.open();
+        dataSource.open();
 
-        //ExamMemory shoppingMemo = dataSource.createShoppingMemo("Testprodukt", "2");
-        //Log.i(LOG_TAG, "Es wurde der folgende Eintrag in die Datenbank geschrieben:");
-        //Log.i(LOG_TAG, "ID: " + shoppingMemo.getId() + ", Inhalt: " + shoppingMemo.toString());
+        final ListView listViewExams = (ListView) findViewById(R.id.list_view);
+        final List<ExamMemory> examMemoList = getExamList();
 
-        //Log.i(LOG_TAG, "Folgende Einträge sind in der Datenbank vorhanden:");
-        //showAllListEntries();
+        listViewExams.setClickable(true);
+        listViewExams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                final int position = pos;
+                final ImageButton delete = (ImageButton)view.findViewById(R.id.delete_button);
+                final int itemHeight = view.getHeight();
 
-        //Log.i(LOG_TAG, "Die Datenquelle wird geschlossen.");
-        //dataSource.close();
+                if(delete.getVisibility() == View.GONE) {
+                    openAnimation(delete, view);
+                }
+                else {
+                    closeAnimation(delete, view);
+                }
+
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(ExamListActivity.this);
+                        deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                ExamMemory deleteExam = examMemoList.get(position);
+                                dataSource.deleteExam(deleteExam);
+                                updateExamList(listViewExams);
+                                dialog.cancel();
+
+                            }
+                        }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).create().show();
+                    }
+                });
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -56,12 +99,44 @@ public class ExamListActivity extends AppCompatActivity {
         });
     }
 
+    private void openAnimation(final ImageButton delete, View view) {
+        final int itemHeight = view.getHeight();
+            ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -150f);
+            translateList.setDuration(200);
+            translateList.setInterpolator(new AccelerateDecelerateInterpolator());
+            translateList.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    delete.getLayoutParams().height = itemHeight;
+                    delete.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+
+                }
+            });
+            translateList.start();
+    }
+
+    private void closeAnimation(final ImageButton delete, View view) {
+        ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f);
+        translateList.setDuration(200);
+        translateList.setInterpolator(new AccelerateDecelerateInterpolator());
+        translateList.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                delete.setVisibility(View.GONE);
+            }
+        });
+        translateList.start();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
 
         Log.i(LOG_TAG, "Die Datenquelle wird geöffnet.");
-        dataSource.open();
         showAllListEntries();
     }
 
@@ -74,7 +149,6 @@ public class ExamListActivity extends AppCompatActivity {
     }
 
     private void showAllListEntries () {
-
         final List<ExamMemory> examMemoList = getExamList();
         final ListView listViewExams = (ListView) findViewById(R.id.list_view);
 
@@ -86,7 +160,7 @@ public class ExamListActivity extends AppCompatActivity {
         if(date != null && !ParseHelper.getExpirationBool(date)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setMessage("An exam has expired. Do you want to delete it?").setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dataSource.deleteExam(date);
                     updateExamList(listViewExams);

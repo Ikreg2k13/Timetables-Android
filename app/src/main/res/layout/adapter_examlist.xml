@@ -1,61 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:id="@+id/relativelistview"
+    android:descendantFocusability="blocksDescendants">
 
-    <TableRow
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/examlist_row1"
-        android:weightSum="1">
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:id="@+id/table_listView">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/exam_list_course"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/exam_list_daysleft"
-            android:textSize="18sp"
-            android:text=" - in 3 days"/>
-
-        <TextView
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/exam_list_room"
-            android:textSize="18sp"
-            android:layout_weight="1"
-            android:gravity="end"/>
+            android:id="@+id/examlist_row1"
+            android:weightSum="1"
+            android:layout_marginRight="50dp"
+            android:layout_marginEnd="50dp">
 
-    </TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/exam_list_course"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/examlist_row2"
-        android:weightSum="10"
-        android:layout_marginTop="6dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/exam_list_daysleft"
+                android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="0dp"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/exam_list_room"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:gravity="end"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/exam_list_date"
-            android:layout_weight="7"
-            android:textSize="17sp"/>
+            android:id="@+id/examlist_row2"
+            android:weightSum="10"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginEnd="50dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/exam_list_time"
-            android:layout_weight="3"
-            android:textSize="17sp"
-            android:gravity="end"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/exam_list_date"
+                android:layout_weight="7"
+                android:textSize="17sp"/>
 
-    </TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/exam_list_time"
+                android:layout_weight="3"
+                android:textSize="17sp"
+                android:gravity="end"/>
 
-</TableLayout>
+        </TableRow>
+    </TableLayout>
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/ic_deletebutton"
+        android:id="@+id/delete_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@color/darkGrey"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -54,25 +54,35 @@ public class ExamAddActivity extends AppCompatActivity {
                 String dateString = editDate.getText().toString();
                 String timeString = editTime.getText().toString();
                 String courseString = spinnerCourse.getSelectedItem().toString();
-                long roomLong = Long.parseLong(editRoom.getText().toString());
-                long lengthLong = Long.parseLong(editLength.getText().toString());
+                String roomString = editRoom.getText().toString();
+                String lengthString = editLength.getText().toString();
 
                 if (TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
                     return;
-//                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
-//                        !DateUtils.isToday(ParseHelper.parseDateStringToLong(editDate.getText().toString()))) {
-//                    editDate.setError("Required");
+                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
+                        !DateUtils.isToday(ParseHelper.parseDateStringToLong(editDate.getText().toString()))) {
+                    editDate.setError("Required");
                     //Snackbar.make(view, "Date set is invalid!", Snackbar.LENGTH_LONG).setAction("Action", null);
                     //editDate.setText(ParseHelper.parseLongDateToString(calendar.getTimeInMillis()));
-//                    return;
+                    return;
                     }
 
                 if(TextUtils.isEmpty(timeString)) {
                     editTime.setError("Required");
                     return;
                 }
+                if(TextUtils.isEmpty(roomString)) {
+                    editRoom.setError("Required");
+                    return;
+                }
+                if(TextUtils.isEmpty(lengthString)) {
+                    editLength.setError("Required");
+                    return;
+                }
 
+                long roomLong = Long.parseLong(editRoom.getText().toString());
+                long lengthLong = Long.parseLong(editLength.getText().toString());
                 long dateLong = ParseHelper.parseDateStringToLong(dateString);
 
                 dataSource.createShoppingMemo(dateLong, timeString, courseString, roomLong, lengthLong, null, null, 0);

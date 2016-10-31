@@ -57,15 +57,26 @@ public class ExamListActivity extends AppCompatActivity {
         listViewExams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                final int position = pos;
-                final ImageButton delete = (ImageButton)view.findViewById(R.id.delete_button);
-                final int itemHeight = view.getHeight();
+                final View view1 = view;
+                //final int position = pos;
+                final ImageButton delete = (ImageButton)view1.findViewById(R.id.delete_button);
+                final ExamMemory clickedExam = examMemoList.get(pos);
+                int openItemId = getOpenItemId(examMemoList);
+                View openView = listViewExams.getChildAt(openItemId);
 
                 if(delete.getVisibility() == View.GONE) {
-                    openAnimation(delete, view);
+                    openAnimation(view1);
+                    if(openItemId != -1) {
+                        closeAnimation(openView);
+                        if(getOpenItem(examMemoList) != null) {
+                            getOpenItem(examMemoList).setClosed();
+                        }
+                    }
+                    clickedExam.setOpen();
                 }
                 else {
-                    closeAnimation(delete, view);
+                    closeAnimation(view1);
+                    clickedExam.setClosed();
                 }
 
                 delete.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +85,7 @@ public class ExamListActivity extends AppCompatActivity {
                         AlertDialog.Builder deleteDialog = new AlertDialog.Builder(ExamListActivity.this);
                         deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                ExamMemory deleteExam = examMemoList.get(position);
-                                dataSource.deleteExam(deleteExam);
+                                dataSource.deleteExam(clickedExam);
                                 updateExamList(listViewExams);
                                 dialog.cancel();
 
@@ -83,6 +93,7 @@ public class ExamListActivity extends AppCompatActivity {
                         }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                closeAnimation(view1);
                             }
                         }).create().show();
                     }
@@ -99,10 +110,25 @@ public class ExamListActivity extends AppCompatActivity {
         });
     }
 
-    private void openAnimation(final ImageButton delete, View view) {
+    private int getOpenItemId(List<ExamMemory> list) {
+        for(ExamMemory exam : list) {
+            if(exam.isOpen()) return list.indexOf(exam);
+        }
+        return -1;
+    }
+
+    private ExamMemory getOpenItem(List<ExamMemory> list) {
+        for(ExamMemory exam : list) {
+            if(exam.isOpen()) return exam;
+        }
+        return null;
+    }
+
+    private void openAnimation(View view) {
+        final ImageButton delete = (ImageButton) view.findViewById(R.id.delete_button);
         final int itemHeight = view.getHeight();
             ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -150f);
-            translateList.setDuration(200);
+            translateList.setDuration(120);
             translateList.setInterpolator(new AccelerateDecelerateInterpolator());
             translateList.addListener(new AnimatorListenerAdapter() {
                 @Override
@@ -119,9 +145,10 @@ public class ExamListActivity extends AppCompatActivity {
             translateList.start();
     }
 
-    private void closeAnimation(final ImageButton delete, View view) {
+    private void closeAnimation(View view) {
+        final ImageButton delete = (ImageButton) view.findViewById(R.id.delete_button);
         ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f);
-        translateList.setDuration(200);
+        translateList.setDuration(120);
         translateList.setInterpolator(new AccelerateDecelerateInterpolator());
         translateList.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -137,6 +164,7 @@ public class ExamListActivity extends AppCompatActivity {
         super.onResume();
 
         Log.i(LOG_TAG, "Die Datenquelle wird geöffnet.");
+        dataSource.open();
         showAllListEntries();
     }
 
@@ -160,12 +188,12 @@ public class ExamListActivity extends AppCompatActivity {
         if(date != null && !ParseHelper.getExpirationBool(date)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(true
+            ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dataSource.deleteExam(date);
                     updateExamList(listViewExams);
                     dialog.cancel();
-
                 }
             }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {

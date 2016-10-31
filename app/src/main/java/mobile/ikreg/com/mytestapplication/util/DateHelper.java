@@ -32,11 +32,6 @@ public class DateHelper {
         else return " - in " + (timeLeft + 1) + " days";
     }
 
-    public static void deleteDate(ExamMemory date, List<ExamMemory> examList, ExamDataSource dataSource) {
-                examList.remove(date);
-                dataSource.deleteExam(date);
-    }
-
     public static ExamMemory getDateExpired(List<ExamMemory> list) {
         Iterator<ExamMemory> iter = list.iterator();
 

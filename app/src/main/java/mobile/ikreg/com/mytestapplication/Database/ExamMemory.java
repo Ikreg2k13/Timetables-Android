@@ -1,5 +1,7 @@
 package mobile.ikreg.com.mytestapplication.database;
 
+import java.util.List;
+
 public class ExamMemory {
 
     private long date;
@@ -11,6 +13,7 @@ public class ExamMemory {
     private String notes;
     private long id;
     private long hasExpired;
+    private boolean open;
 
 
     public ExamMemory(long date, String time, String course, long room, long length, String notific, String notes, long expired, long id) {
@@ -23,6 +26,7 @@ public class ExamMemory {
         this.notes = notes;
         this.hasExpired = expired;
         this.id = id;
+        this.open = false;
     }
 
 
@@ -65,11 +69,9 @@ public class ExamMemory {
     public long getExpired() { return hasExpired; }
     public void setExpired() { this.hasExpired = 1; }
 
-    public ExamMemory getExamAtPosition() {
-
-        return null;
-    }
-
+    public void setOpen() { open = true; }
+    public void setClosed() { open = false; }
+    public boolean isOpen() { return open; };
 
     @Override
     public String toString() {

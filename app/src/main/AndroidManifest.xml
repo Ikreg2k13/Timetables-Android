@@ -30,9 +30,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ExamAddActivity"
-            android:theme="@style/AppTheme"
+            android:label="Add Exam"
             android:parentActivityName=".ExamListActivity"
-            android:label="Add Exam" />
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ColorPickerActivity"></activity>
     </application>
 
 </manifest>

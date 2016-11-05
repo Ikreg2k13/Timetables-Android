@@ -58,7 +58,6 @@ public class ExamListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 final View view1 = view;
-                //final int position = pos;
                 final ImageButton delete = (ImageButton)view1.findViewById(R.id.delete_button);
                 final ExamMemory clickedExam = examMemoList.get(pos);
                 int openItemId = getOpenItemId(examMemoList);
@@ -94,6 +93,9 @@ public class ExamListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 closeAnimation(view1);
+                                if(getOpenItem(examMemoList) != null) {
+                                    getOpenItem(examMemoList).setClosed();
+                                }
                             }
                         }).create().show();
                     }

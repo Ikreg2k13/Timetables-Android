@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:text="Add Course Name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/textView2"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="12dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:weightSum="6">
+
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:inputType="textPersonName"
+            android:hint="Course"
+            android:ems="10"
+            android:id="@+id/editText"
+            android:layout_weight="6"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"/>
+
+        <View
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:background="@color/colorAccent"
+            android:id="@+id/selectedColor"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="Select Color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_marginTop="18dp"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"/>
+
+    <mobile.ikreg.com.mytestapplication.widget.colorPicker.ColorPicker
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_margin="10dp"
+        android:id="@+id/pickerMain"/>
+
+    <mobile.ikreg.com.mytestapplication.widget.colorPicker.ColorPicker
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:id="@+id/pickerSub"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp">
+
+        <Button
+            android:text="Cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2"
+            android:layout_weight="4"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textColor="@color/colorAccent"
+            android:background="@color/white"
+            android:gravity="end" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:text="Add"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:layout_weight="1"
+            android:textColor="@color/colorAccent"
+            android:background="@color/white"
+            android:gravity="center"/>
+    </LinearLayout>
+
+</LinearLayout>

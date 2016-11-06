@@ -1,6 +1,7 @@
 package mobile.ikreg.com.mytestapplication;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
 import mobile.ikreg.com.mytestapplication.util.AddExamSpinnerAdapter;
+import mobile.ikreg.com.mytestapplication.util.dialog.AddCoursePopup;
 import mobile.ikreg.com.mytestapplication.util.dialog.DatePopup;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 import mobile.ikreg.com.mytestapplication.util.dialog.TimePopup;
@@ -43,11 +45,20 @@ public class ExamAddActivity extends AppCompatActivity {
     private void onButtonPressed() {
         Button saveButton = (Button)findViewById(R.id.buttonSave);
         Button cancelButton = (Button)findViewById(R.id.buttonCancel);
+        ImageButton addCourse = (ImageButton)findViewById(R.id.addcourse);
         final EditText editDate = (EditText)findViewById(R.id.editDate);
         final EditText editTime = (EditText)findViewById(R.id.editTime);
         final Spinner spinnerCourse = (Spinner)findViewById(R.id.spinnerCourse);
         final EditText editRoom = (EditText)findViewById(R.id.editRoom);
         final EditText editLength = (EditText)findViewById(R.id.editLength);
+
+        addCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddCoursePopup addCourse = new AddCoursePopup(ExamAddActivity.this);
+                addCourse.show();
+            }
+        });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

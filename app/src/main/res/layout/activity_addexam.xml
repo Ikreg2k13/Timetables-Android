@@ -139,12 +139,11 @@
 
             <ImageButton
                 app:srcCompat="@drawable/ic_addplus"
-                android:tint="@color/white"
-                android:id="@+id/imageButton"
+                android:tint="@color/colorAccent"
+                android:id="@+id/addcourse"
                 android:layout_height="match_parent"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:background="@color/colorAccent"
-                android:layout_width="43dp" />
+                android:layout_width="60dp" />
         </LinearLayout>
 
     </TableRow>

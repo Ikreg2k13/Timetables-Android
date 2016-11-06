@@ -33,7 +33,8 @@
             android:label="Add Exam"
             android:parentActivityName=".ExamListActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ColorPickerActivity"></activity>
+        <activity
+            android:name=".ColorPickerActivity"/>
     </application>
 
 </manifest>

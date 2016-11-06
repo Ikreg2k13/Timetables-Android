@@ -10,14 +10,19 @@ import android.view.View;
 
 public class ColorPicker extends View {
 
+    /*
+    *   This class and all its methods are copied, modified and merged from https://github.com/DASAR/ShiftColorPicker
+    *   This project is subject to The MIT License (MIT) for software.
+    *   The related copyright agreement can be found at https://opensource.org/licenses/MIT
+    */
+
     private Rect rect = new Rect();
-    private int[] colors = MaterialColorPalette.MAIN;
+    private int[] colors = MaterialColorPalette.RAINBOW;
     private int cellSize;
     private int selectedColor = colors[0];
     private boolean isColorSelected;
     private OnColorChangedListener onColorChanged;
     private int screenW;
-    private int screenH;
     Paint paint;
 
     public ColorPicker(Context context, AttributeSet attrs) {
@@ -112,8 +117,6 @@ public class ColorPicker extends View {
     private int getColorAtXY(float x, float y) {
 
         // FIXME: colors.length == 0 -> devision by ZERO.s
-
-//        if (orientation == HORIZONTAL) {
             int left = 0;
             int right = 0;
 
@@ -123,29 +126,13 @@ public class ColorPicker extends View {
 
                 if (left <= x && right >= x) return colors[i];
             }
-/*
-        } else {
-            int top = 0;
-            int bottom = 0;
-
-            for (int i = 0; i < colors.length; i++) {
-                top = bottom;
-                bottom += cellSize;
-
-                if (y >= top && y <= bottom) {
-                    return colors[i];
-                }
-            }
-        }
-*/
-        return selectedColor;
+            return selectedColor;
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
         screenW = w;
-        screenH = h;
 
         recalcCellSize();
 
@@ -190,5 +177,27 @@ public class ColorPicker extends View {
 
     public void setOnColorChangedListener(OnColorChangedListener l) {
         this.onColorChanged = l;
+    }
+
+    public int getColor() {
+        return selectedColor;
+    }
+
+    public String getHexColor() {
+        return String.format("#%06X", 0xFFFFFF & selectedColor);
+    }
+
+    public void setColors(int[] colors) {
+        // TODO: selected color can be NOT in set of colors
+        // FIXME: colors can be null
+        this.colors = colors;
+
+        if (!containsColor(colors, selectedColor)) {
+            selectedColor = colors[0];
+        }
+
+        recalcCellSize();
+
+        invalidate();
     }
 }

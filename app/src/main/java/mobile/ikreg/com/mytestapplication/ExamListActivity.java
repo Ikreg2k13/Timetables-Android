@@ -82,7 +82,7 @@ public class ExamListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder deleteDialog = new AlertDialog.Builder(ExamListActivity.this);
-                        deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(false).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dataSource.deleteExam(clickedExam);
                                 updateExamList(listViewExams);
@@ -190,7 +190,7 @@ public class ExamListActivity extends AppCompatActivity {
         if(date != null && !ParseHelper.getExpirationBool(date)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(true
+            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(false
             ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dataSource.deleteExam(date);

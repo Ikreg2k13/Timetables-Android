@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:text="Add Course Name"
+        android:text="Set a Course Name"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:id="@+id/textView2"
@@ -19,7 +19,11 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:weightSum="6">
+        android:weightSum="6"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp">
 
 
         <EditText
@@ -30,24 +34,27 @@
             android:ems="10"
             android:id="@+id/editText"
             android:layout_weight="6"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"/>
+            android:textSize="16sp" />
 
         <View
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            android:background="@color/colorAccent"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/universal_circle_view"
             android:id="@+id/selectedColor"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"/>
     </LinearLayout>
 
     <TextView
-        android:text="Select Color"
+        android:text="Select a Color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"
         android:layout_marginTop="18dp"
+        android:layout_marginBottom="10dp"
         android:textSize="17sp"
         android:textStyle="bold"
         android:gravity="center_horizontal"/>
@@ -82,7 +89,9 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:textColor="@color/colorAccent"
             android:background="@color/white"
-            android:gravity="end" />
+            android:gravity="end|center_vertical"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"/>
 
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"

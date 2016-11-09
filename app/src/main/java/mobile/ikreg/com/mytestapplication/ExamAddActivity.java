@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -45,7 +46,7 @@ public class ExamAddActivity extends AppCompatActivity {
     private void onButtonPressed() {
         Button saveButton = (Button)findViewById(R.id.buttonSave);
         Button cancelButton = (Button)findViewById(R.id.buttonCancel);
-        ImageButton addCourse = (ImageButton)findViewById(R.id.addcourse);
+        ImageView addCourse = (ImageView)findViewById(R.id.addcourse);
         final EditText editDate = (EditText)findViewById(R.id.editDate);
         final EditText editTime = (EditText)findViewById(R.id.editTime);
         final Spinner spinnerCourse = (Spinner)findViewById(R.id.spinnerCourse);

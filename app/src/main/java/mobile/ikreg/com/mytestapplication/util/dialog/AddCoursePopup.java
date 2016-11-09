@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +18,7 @@ import mobile.ikreg.com.mytestapplication.widget.colorPicker.MaterialColorPalett
 import mobile.ikreg.com.mytestapplication.widget.colorPicker.OnColorChangedListener;
 
 
-public class AddCoursePopup extends Dialog implements View.OnClickListener {
+public class AddCoursePopup extends Dialog {
 
     public AddCoursePopup(Activity activity) {
         super(activity);
@@ -43,7 +45,7 @@ public class AddCoursePopup extends Dialog implements View.OnClickListener {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("ColorPicker", "Course added");
+                AddCoursePopup.this.cancel();
             }
         });
     }
@@ -52,11 +54,12 @@ public class AddCoursePopup extends Dialog implements View.OnClickListener {
         final ColorPicker mainPicker = (ColorPicker)findViewById(R.id.pickerMain);
         final ColorPicker subPicker = (ColorPicker)findViewById(R.id.pickerSub);
         final View selectedColor = findViewById(R.id.selectedColor);
+        final GradientDrawable circleShape = (GradientDrawable)selectedColor.getBackground();
 
         mainPicker.setSelectedColor(Color.parseColor("#F44336"));
         subPicker.setColors(MaterialColorPalette.RED);
         subPicker.setSelectedColor(Color.parseColor("#F44336"));
-        selectedColor.setBackgroundColor(Color.parseColor("#F44336"));
+        circleShape.setColor(Color.parseColor("#F44336"));
 
         mainPicker.setOnColorChangedListener(new OnColorChangedListener() {
             @Override
@@ -67,7 +70,7 @@ public class AddCoursePopup extends Dialog implements View.OnClickListener {
         subPicker.setOnColorChangedListener(new OnColorChangedListener() {
             @Override
             public void onColorChanged(int c) {
-                selectedColor.setBackgroundColor(Color.parseColor(subPicker.getHexColor()));
+                circleShape.setColor(Color.parseColor(subPicker.getHexColor()));
             }
         });
     }
@@ -119,10 +122,5 @@ public class AddCoursePopup extends Dialog implements View.OnClickListener {
                 break;
 
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 }

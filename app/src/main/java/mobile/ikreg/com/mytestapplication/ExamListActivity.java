@@ -63,7 +63,7 @@ public class ExamListActivity extends AppCompatActivity {
                 int openItemId = getOpenItemId(examMemoList);
                 View openView = listViewExams.getChildAt(openItemId);
 
-                if(delete.getVisibility() == View.GONE) {
+                if(delete.getVisibility() == View.INVISIBLE) {
                     openAnimation(view1);
                     if(openItemId != -1) {
                         closeAnimation(openView);
@@ -128,14 +128,12 @@ public class ExamListActivity extends AppCompatActivity {
 
     private void openAnimation(View view) {
         final ImageButton delete = (ImageButton) view.findViewById(R.id.delete_button);
-        final int itemHeight = view.getHeight();
             ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -150f);
             translateList.setDuration(120);
             translateList.setInterpolator(new AccelerateDecelerateInterpolator());
             translateList.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    delete.getLayoutParams().height = itemHeight;
                     delete.setVisibility(View.VISIBLE);
                 }
 
@@ -155,7 +153,7 @@ public class ExamListActivity extends AppCompatActivity {
         translateList.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                delete.setVisibility(View.GONE);
+                delete.setVisibility(View.INVISIBLE);
             }
         });
         translateList.start();
@@ -182,7 +180,7 @@ public class ExamListActivity extends AppCompatActivity {
         final List<ExamMemory> examMemoList = getExamList();
         final ListView listViewExams = (ListView) findViewById(R.id.list_view);
 
-        final ExamListAdapter examArrayAdapter = new ExamListAdapter(this, R.layout.adapter_examlist, examMemoList);
+        final ExamListAdapter examArrayAdapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examMemoList);
         listViewExams.setAdapter(examArrayAdapter);
 
         final ExamMemory date = DateHelper.getDateExpired(examMemoList);
@@ -210,7 +208,7 @@ public class ExamListActivity extends AppCompatActivity {
 
     private void updateExamList(ListView listView) {
         List<ExamMemory> changedList = getExamList();
-        ExamListAdapter changedAdapter = new ExamListAdapter(this, R.layout.adapter_examlist, changedList);
+        ExamListAdapter changedAdapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, changedList);
         listView.setAdapter(changedAdapter);
     }
 

@@ -22,16 +22,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_examlist" />
+    <include layout="@layout/content_examlist"
+        android:id="@+id/include" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="top|center_horizontal"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_addplus"
+        app:srcCompat="@drawable/ic_add"
         app:fabSize="normal"
-        app:elevation="6dp" />
+        app:elevation="6dp"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom|right" />
 
 </android.support.design.widget.CoordinatorLayout>

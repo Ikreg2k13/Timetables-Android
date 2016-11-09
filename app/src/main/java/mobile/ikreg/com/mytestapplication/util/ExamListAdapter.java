@@ -44,7 +44,7 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
 
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.adapter_examlist, parent, false);
+            convertView = inflater.inflate(R.layout.adapter_examlist_two, parent, false);
         }
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -66,9 +66,6 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
         time.setText(this.examList.get(position).getTime());
         daysleft.setText(DateHelper.getDaysLeft(c.getTimeInMillis(),this.examList.get(position).getDate()));
         room.setText("R " + ParseHelper.parseLongToString(3, this.examList.get(position).getRoom()));
-
-        ImageButton deleteButton = (ImageButton)convertView.findViewById(R.id.delete_button);
-        deleteButton.setTag(position);
 
         return convertView;
     }

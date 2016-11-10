@@ -12,32 +12,42 @@ public class MemoryHelper extends SQLiteOpenHelper{
     public static final int DB_VERSION = 1;
 
     public static final String TABLE_EXAM_LIST = "exam_memory";
+    public static final String TABLE_COURSE_LIST = "course_memory";
 
-    //Product equals Date
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_DATE = "date";
-    public static final String COLUMN_TIME = "time";
-    public static final String COLUMN_COURSE = "course";
-    public static final String COLUMN_ROOM = "room";
-    public static final String COLUMN_LENGTH = "length";
-    public static final String COLUMN_NOTIFIC = "notific";
-    public static final String COLUMN_NOTES = "notes";
-    public static final String COLUMN_EXPIRED = "expired";
+    public static final String KEY_ID = "_id";
 
-    public static final String SQL_CREATE = "CREATE TABLE " + TABLE_EXAM_LIST + "(" +
-            COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_DATE + " INTEGER NOT NULL, " +
-            COLUMN_TIME + " TEXT NOT NULL, " +
-            COLUMN_COURSE + " TEXT NOT NULL, " +
-            COLUMN_ROOM + " INTEGER NOT NULL, " +
-            COLUMN_LENGTH + " INTEGER NOT NULL, " +
-            COLUMN_NOTIFIC + " TEXT , " +
-            COLUMN_NOTES + " TEXT , " +
-            COLUMN_EXPIRED + " INTEGER " + ")";
+    //ExamMemory Table
+    public static final String EXAM_DATE = "date";
+    public static final String EXAM_TIME = "time";
+    public static final String EXAM_COURSE = "course";
+    public static final String EXAM_ROOM = "room";
+    public static final String EXAM_LENGTH = "length";
+    public static final String EXAM_NOTIFIC = "notific";
+    public static final String EXAM_NOTES = "notes";
+    public static final String EXAM_EXPIRED = "expired";
+
+    //CourseMemory Table
+    public static final String COURSE_NAME="course_name";
+    public static final String COURSE_COLOR="course_color";
+
+    public static final String CREATE_TABLE_EXAM = "CREATE TABLE " + TABLE_EXAM_LIST + "(" +
+            KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            EXAM_DATE + " INTEGER NOT NULL, " +
+            EXAM_TIME + " TEXT NOT NULL, " +
+            EXAM_COURSE + " TEXT NOT NULL, " +
+            EXAM_ROOM + " INTEGER NOT NULL, " +
+            EXAM_LENGTH + " INTEGER NOT NULL, " +
+            EXAM_NOTIFIC + " TEXT , " +
+            EXAM_NOTES + " TEXT , " +
+            EXAM_EXPIRED + " INTEGER " + ")";
+
+    public static final String CREATE_TABLE_COURSE = "CREATE TABLE " + TABLE_COURSE_LIST + "(" +
+            KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COURSE_NAME + "TEXT NOT NULL, " +
+            COURSE_COLOR + "INTEGER NOT NULL " + ")";
 
 
     public MemoryHelper(Context context) {
-        //super(context, "PLATZHALTER_DATENBANKNAME", null, 1);
         super(context, DB_NAME, null, DB_VERSION);
         Log.i(LOG_TAG, "DbHelper hat die Datenbank: " + getDatabaseName() + " erzeugt.");
     }
@@ -45,8 +55,9 @@ public class MemoryHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            Log.i(LOG_TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
-            db.execSQL(SQL_CREATE);
+            Log.i(LOG_TAG, "Die Tabelle wird mit SQL-Befehl: " + CREATE_TABLE_EXAM + " angelegt.");
+            db.execSQL(CREATE_TABLE_EXAM);
+            db.execSQL(CREATE_TABLE_COURSE);
         }
         catch (Exception ex) {
             Log.e(LOG_TAG, "Database Error: " + ex.getMessage());

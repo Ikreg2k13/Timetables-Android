@@ -40,6 +40,9 @@ public class ExamListActivity extends AppCompatActivity {
 
     private ExamDataSource dataSource = new ExamDataSource(this);
     public static final String LOG_TAG = ExamListActivity.class.getSimpleName();
+    private List<ExamMemory> examList;
+    private ExamListAdapter adapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,25 +53,27 @@ public class ExamListActivity extends AppCompatActivity {
 
         dataSource.open();
 
-        final ListView listViewExams = (ListView) findViewById(R.id.list_view);
-        final List<ExamMemory> examMemoList = getExamList();
+        this.examList = getExamList();
+        this.adapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examList);
+        this.listView = (ListView) findViewById(R.id.list_view);
+        showListEntries();
 
-        listViewExams.setClickable(true);
-        listViewExams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 final View view1 = view;
                 final ImageButton delete = (ImageButton)view1.findViewById(R.id.delete_button);
-                final ExamMemory clickedExam = examMemoList.get(pos);
-                int openItemId = getOpenItemId(examMemoList);
-                View openView = listViewExams.getChildAt(openItemId);
+                final ExamMemory clickedExam = examList.get(pos);
+                int openItemId = getOpenItemId(examList);
+                View openView = listView.getChildAt(openItemId);
 
                 if(delete.getVisibility() == View.INVISIBLE) {
                     openAnimation(view1);
                     if(openItemId != -1) {
                         closeAnimation(openView);
-                        if(getOpenItem(examMemoList) != null) {
-                            getOpenItem(examMemoList).setClosed();
+                        if(getOpenItem(examList) != null) {
+                            getOpenItem(examList).setClosed();
                         }
                     }
                     clickedExam.setOpen();
@@ -85,7 +90,7 @@ public class ExamListActivity extends AppCompatActivity {
                         deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(false).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dataSource.deleteExam(clickedExam);
-                                updateExamList(listViewExams);
+                                updateExamList(listView);
                                 dialog.cancel();
 
                             }
@@ -93,8 +98,8 @@ public class ExamListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 closeAnimation(view1);
-                                if(getOpenItem(examMemoList) != null) {
-                                    getOpenItem(examMemoList).setClosed();
+                                if(getOpenItem(examList) != null) {
+                                    getOpenItem(examList).setClosed();
                                 }
                             }
                         }).create().show();
@@ -164,8 +169,8 @@ public class ExamListActivity extends AppCompatActivity {
         super.onResume();
 
         Log.i(LOG_TAG, "Die Datenquelle wird geöffnet.");
-        dataSource.open();
-        showAllListEntries();
+        //dataSource.open();
+        //showAllListEntries();
     }
 
     @Override
@@ -197,7 +202,33 @@ public class ExamListActivity extends AppCompatActivity {
                 }
             }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    dataSource.updateExamMemory(date.getId(), date.getDate(), date.getTime(), date.getCourse(), date.getRoom(), date.getLength(), date.getNotific(), date.getNotes(), 1);
+                    dataSource.updateExpired(date, 1);
+                    dialog.cancel();
+                    TextView tv = (TextView)findViewById(R.id.exam_list_daysleft);
+                    tv.setText(" - expired");
+                }
+            }).create().show();
+        }
+    }
+
+    private void showListEntries () {
+        listView.setAdapter(adapter);
+
+        final ExamMemory date = DateHelper.getDateExpired(examList);
+
+        if(date != null && !ParseHelper.getExpirationBool(date)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(false
+            ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dataSource.deleteExam(date);
+                    updateExamList(listView);
+                    dialog.cancel();
+                }
+            }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dataSource.updateExpired(date, 1);
                     dialog.cancel();
                     TextView tv = (TextView)findViewById(R.id.exam_list_daysleft);
                     tv.setText(" - expired");
@@ -207,8 +238,8 @@ public class ExamListActivity extends AppCompatActivity {
     }
 
     private void updateExamList(ListView listView) {
-        List<ExamMemory> changedList = getExamList();
-        ExamListAdapter changedAdapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, changedList);
+        this.examList = getExamList();
+        ExamListAdapter changedAdapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examList);
         listView.setAdapter(changedAdapter);
     }
 

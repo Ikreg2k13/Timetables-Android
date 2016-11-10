@@ -16,9 +16,9 @@ public class ExamDataSource {
 
     private SQLiteDatabase database;
     private MemoryHelper dbHelper;
-    private String[] columns = {MemoryHelper.COLUMN_ID, MemoryHelper.COLUMN_DATE, MemoryHelper.COLUMN_TIME,
-                                MemoryHelper.COLUMN_COURSE, MemoryHelper.COLUMN_ROOM, MemoryHelper.COLUMN_LENGTH,
-                                MemoryHelper.COLUMN_NOTIFIC, MemoryHelper.COLUMN_NOTES, MemoryHelper.COLUMN_EXPIRED};
+    private String[] columns = {MemoryHelper.KEY_ID, MemoryHelper.EXAM_DATE, MemoryHelper.EXAM_TIME,
+                                MemoryHelper.EXAM_COURSE, MemoryHelper.EXAM_ROOM, MemoryHelper.EXAM_LENGTH,
+                                MemoryHelper.EXAM_NOTIFIC, MemoryHelper.EXAM_NOTES, MemoryHelper.EXAM_EXPIRED};
 
 
     public ExamDataSource(Context context) {
@@ -39,19 +39,19 @@ public class ExamDataSource {
 
     public ExamMemory createShoppingMemo(long date, String time, String course, long room, long length, String notific, String notes, long expired) {
         ContentValues values = new ContentValues();
-        values.put(MemoryHelper.COLUMN_DATE, date);
-        values.put(MemoryHelper.COLUMN_TIME, time);
-        values.put(MemoryHelper.COLUMN_COURSE, course);
-        values.put(MemoryHelper.COLUMN_ROOM, room);
-        values.put(MemoryHelper.COLUMN_LENGTH, length);
-        values.put(MemoryHelper.COLUMN_NOTIFIC, notific);
-        values.put(MemoryHelper.COLUMN_NOTES, notes);
-        values.put(MemoryHelper.COLUMN_EXPIRED, expired);
+        values.put(MemoryHelper.EXAM_DATE, date);
+        values.put(MemoryHelper.EXAM_TIME, time);
+        values.put(MemoryHelper.EXAM_COURSE, course);
+        values.put(MemoryHelper.EXAM_ROOM, room);
+        values.put(MemoryHelper.EXAM_LENGTH, length);
+        values.put(MemoryHelper.EXAM_NOTIFIC, notific);
+        values.put(MemoryHelper.EXAM_NOTES, notes);
+        values.put(MemoryHelper.EXAM_EXPIRED, expired);
 
         long insertId = database.insert(MemoryHelper.TABLE_EXAM_LIST, null, values);
 
         Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
-                columns, MemoryHelper.COLUMN_ID + "=" + insertId,
+                columns, MemoryHelper.KEY_ID + "=" + insertId,
                 null, null, null, null);
 
         cursor.moveToFirst();
@@ -62,15 +62,15 @@ public class ExamDataSource {
     }
 
     private ExamMemory cursorToExamMemo(Cursor cursor) {
-        int idIndex = cursor.getColumnIndex(MemoryHelper.COLUMN_ID);
-        int idDate = cursor.getColumnIndex(MemoryHelper.COLUMN_DATE);
-        int idTime = cursor.getColumnIndex(MemoryHelper.COLUMN_TIME);
-        int idCourse = cursor.getColumnIndex(MemoryHelper.COLUMN_COURSE);
-        int idRoom = cursor.getColumnIndex(MemoryHelper.COLUMN_ROOM);
-        int idLength = cursor.getColumnIndex(MemoryHelper.COLUMN_LENGTH);
-        int idNotific = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTIFIC);
-        int idNotes = cursor.getColumnIndex(MemoryHelper.COLUMN_NOTES);
-        int idExpired = cursor.getColumnIndex(MemoryHelper.COLUMN_EXPIRED);
+        int idIndex = cursor.getColumnIndex(MemoryHelper.KEY_ID);
+        int idDate = cursor.getColumnIndex(MemoryHelper.EXAM_DATE);
+        int idTime = cursor.getColumnIndex(MemoryHelper.EXAM_TIME);
+        int idCourse = cursor.getColumnIndex(MemoryHelper.EXAM_COURSE);
+        int idRoom = cursor.getColumnIndex(MemoryHelper.EXAM_ROOM);
+        int idLength = cursor.getColumnIndex(MemoryHelper.EXAM_LENGTH);
+        int idNotific = cursor.getColumnIndex(MemoryHelper.EXAM_NOTIFIC);
+        int idNotes = cursor.getColumnIndex(MemoryHelper.EXAM_NOTES);
+        int idExpired = cursor.getColumnIndex(MemoryHelper.EXAM_EXPIRED);
 
         long date = cursor.getLong(idDate);
         String time = cursor.getString(idTime);
@@ -82,9 +82,7 @@ public class ExamDataSource {
         long expired = cursor.getLong(idExpired);
         long id = cursor.getLong(idIndex);
 
-        ExamMemory shoppingMemo = new ExamMemory(date, time, course, room, length, notific, notes, expired, id);
-
-        return shoppingMemo;
+        return new ExamMemory(date, time, course, room, length, notific, notes, expired, id);
     }
 
     public List<ExamMemory> getActiveExamMemos() {
@@ -111,27 +109,27 @@ public class ExamDataSource {
     public void deleteExam(ExamMemory exam) {
         long id = exam.getId();
 
-        database.delete(MemoryHelper.TABLE_EXAM_LIST, MemoryHelper.COLUMN_ID + "=" + id, null);
+        database.delete(MemoryHelper.TABLE_EXAM_LIST, MemoryHelper.KEY_ID + "=" + id, null);
     }
 
     public ExamMemory updateExamMemory(long id, long date, String time, String course, long room, long length, String notific, String notes, long expired) {
         ContentValues values = new ContentValues();
-        values.put(MemoryHelper.COLUMN_DATE, date);
-        values.put(MemoryHelper.COLUMN_TIME, time);
-        values.put(MemoryHelper.COLUMN_COURSE, course);
-        values.put(MemoryHelper.COLUMN_ROOM, room);
-        values.put(MemoryHelper.COLUMN_LENGTH, length);
-        values.put(MemoryHelper.COLUMN_NOTIFIC, notific);
-        values.put(MemoryHelper.COLUMN_NOTES, notes);
-        values.put(MemoryHelper.COLUMN_EXPIRED, expired);
+        values.put(MemoryHelper.EXAM_DATE, date);
+        values.put(MemoryHelper.EXAM_TIME, time);
+        values.put(MemoryHelper.EXAM_COURSE, course);
+        values.put(MemoryHelper.EXAM_ROOM, room);
+        values.put(MemoryHelper.EXAM_LENGTH, length);
+        values.put(MemoryHelper.EXAM_NOTIFIC, notific);
+        values.put(MemoryHelper.EXAM_NOTES, notes);
+        values.put(MemoryHelper.EXAM_EXPIRED, expired);
 
         database.update(MemoryHelper.TABLE_EXAM_LIST,
                 values,
-                MemoryHelper.COLUMN_ID + "=" + id,
+                MemoryHelper.KEY_ID + "=" + id,
                 null);
 
         Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
-                columns, MemoryHelper.COLUMN_ID + "=" + id,
+                columns, MemoryHelper.KEY_ID + "=" + id,
                 null, null, null, null);
 
         cursor.moveToFirst();
@@ -139,5 +137,13 @@ public class ExamDataSource {
         cursor.close();
 
         return examMemo;
+    }
+
+    public void updateExpired(ExamMemory exam, int expired) {
+        ContentValues values = new ContentValues();
+        values.put(MemoryHelper.EXAM_EXPIRED, expired);
+
+        database.update(MemoryHelper.TABLE_EXAM_LIST, values, MemoryHelper.KEY_ID + "= ?",
+                new String[] { String.valueOf(exam.getId())});
     }
 }

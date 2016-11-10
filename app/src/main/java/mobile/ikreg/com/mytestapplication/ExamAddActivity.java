@@ -73,12 +73,13 @@ public class ExamAddActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(dateString)) {
                     editDate.setError("Required");
                     return;
-                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
+/*                } else if (ParseHelper.parseDateStringToLong(editDate.getText().toString()) < calendar.getTimeInMillis() &&
                         !DateUtils.isToday(ParseHelper.parseDateStringToLong(editDate.getText().toString()))) {
                     editDate.setError("Required");
                     //Snackbar.make(view, "Date set is invalid!", Snackbar.LENGTH_LONG).setAction("Action", null);
                     //editDate.setText(ParseHelper.parseLongDateToString(calendar.getTimeInMillis()));
                     return;
+*/
                     }
 
                 if(TextUtils.isEmpty(timeString)) {

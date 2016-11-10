@@ -64,7 +64,9 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
         course.setText(this.examList.get(position).getCourse());
         date.setText(ParseHelper.parseLongDateToString(this.examList.get(position).getDate()));
         time.setText(this.examList.get(position).getTime());
-        daysleft.setText(DateHelper.getDaysLeft(c.getTimeInMillis(),this.examList.get(position).getDate()));
+        if(this.examList.get(position).getExpired() == 0)
+            daysleft.setText(DateHelper.getDaysLeft(c.getTimeInMillis(),this.examList.get(position).getDate()));
+        else daysleft.setText(" - expired");
         room.setText("R " + ParseHelper.parseLongToString(3, this.examList.get(position).getRoom()));
 
         return convertView;

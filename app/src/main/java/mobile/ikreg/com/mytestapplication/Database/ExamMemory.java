@@ -6,7 +6,7 @@ public class ExamMemory {
 
     private long date;
     private String time;
-    private String course;
+    private long course_id;
     private long room;
     private long length;
     private String notific;
@@ -16,10 +16,10 @@ public class ExamMemory {
     private boolean open;
 
 
-    public ExamMemory(long date, String time, String course, long room, long length, String notific, String notes, long expired, long id) {
+    public ExamMemory(long date, String time, long course_id, long room, long length, String notific, String notes, long expired, long id) {
         this.date = date;
         this.time = time;
-        this.course = course;
+        this.course_id = course_id;
         this.room = room;
         this.length = length;
         this.notific = notific;
@@ -28,6 +28,8 @@ public class ExamMemory {
         this.id = id;
         this.open = false;
     }
+
+    public ExamMemory() { }
 
 
     public long getDate() {
@@ -44,8 +46,8 @@ public class ExamMemory {
         this.time = time;
     }
 
-    public String getCourse() {return course; }
-    public void setCourse(String course) { this.course = course; }
+    public long getCourse() {return course_id; }
+    //public void setCourse(int course) { this.course_id = course; }
 
     public long getRoom() { return room; }
     public void setRoom(long room) { this.room = room; }
@@ -69,13 +71,16 @@ public class ExamMemory {
     public long getExpired() { return hasExpired; }
     public void setExpired() { this.hasExpired = 1; }
 
+    //Do not use! Only used for fetching data from database
+    public void setExpired(long exp) { this.hasExpired = exp; }
+
     public void setOpen() { open = true; }
     public void setClosed() { open = false; }
     public boolean isOpen() { return open; };
 
     @Override
     public String toString() {
-        String output = date + ", " + time + ", " + course + ", " + hasExpired;
+        String output = date + ", " + time + ", " + course_id + ", " + hasExpired;
 
         return output;
     }

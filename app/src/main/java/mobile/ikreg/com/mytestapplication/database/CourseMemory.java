@@ -19,4 +19,11 @@ public class CourseMemory {
     public long getColor() { return this.color; }
 
     public long getId() { return this.id; }
+
+    @Override
+    public String toString() {
+        String output = name + ", " + color + ", " + id;
+
+        return output;
+    }
 }

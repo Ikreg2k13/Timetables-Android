@@ -22,11 +22,13 @@ import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.ExamListActivity;
 import mobile.ikreg.com.mytestapplication.R;
+import mobile.ikreg.com.mytestapplication.database.CourseDataSource;
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 
 public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
 
     Calendar c = Calendar.getInstance(TimeZone.getDefault());
+    private CourseDataSource courseSource = new CourseDataSource(this.getContext());
     private Context context;
     private List<ExamMemory> examList;
     private int layoutResourceId;
@@ -60,8 +62,10 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
         TextView time = (TextView)convertView.findViewById(R.id.exam_list_time);
         TextView daysleft = (TextView)convertView.findViewById(R.id.exam_list_daysleft);
         TextView room = (TextView)convertView.findViewById(R.id.exam_list_room);
+        View color = convertView.findViewById(R.id.colorView);
 
-        course.setText(this.examList.get(position).getCourse());
+        course.setText(courseSource.getCourseById(this.examList.get(position).getCourse()).getName());
+        color.setBackgroundColor((int) courseSource.getCourseById(this.examList.get(position).getCourse()).getColor());
         date.setText(ParseHelper.parseLongDateToString(this.examList.get(position).getDate()));
         time.setText(this.examList.get(position).getTime());
         if(this.examList.get(position).getExpired() == 0)

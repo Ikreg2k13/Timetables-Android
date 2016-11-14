@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import mobile.ikreg.com.mytestapplication.R;
+import mobile.ikreg.com.mytestapplication.database.CourseDataSource;
 import mobile.ikreg.com.mytestapplication.widget.colorPicker.ColorPicker;
 import mobile.ikreg.com.mytestapplication.widget.colorPicker.MaterialColorPalette;
 import mobile.ikreg.com.mytestapplication.widget.colorPicker.OnColorChangedListener;
@@ -20,8 +25,11 @@ import mobile.ikreg.com.mytestapplication.widget.colorPicker.OnColorChangedListe
 
 public class AddCoursePopup extends Dialog {
 
-    public AddCoursePopup(Activity activity) {
+    private CourseDataSource courseSource;
+
+    public AddCoursePopup(Activity activity, CourseDataSource source) {
         super(activity);
+        courseSource = source;
     }
 
     @Override
@@ -45,21 +53,36 @@ public class AddCoursePopup extends Dialog {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addCourseToDb();
                 AddCoursePopup.this.cancel();
             }
         });
     }
 
+    private void addCourseToDb() {
+        EditText name = (EditText)findViewById(R.id.courseName);
+        ColorPicker color = (ColorPicker)findViewById(R.id.pickerSub);
+
+        if(TextUtils.isEmpty(name.getText())) {
+            name.setError(null);
+            return;
+        }
+
+        String nameString = name.getText().toString();
+        int colorLong = color.getColor();
+
+        courseSource.createCourse(nameString, colorLong);
+    }
+
     private void setColorPickers() {
         final ColorPicker mainPicker = (ColorPicker)findViewById(R.id.pickerMain);
         final ColorPicker subPicker = (ColorPicker)findViewById(R.id.pickerSub);
-        final View selectedColor = findViewById(R.id.selectedColor);
-        final GradientDrawable circleShape = (GradientDrawable)selectedColor.getBackground();
+        final TextView header = (TextView)findViewById(R.id.courseNameText);
+        final EditText name = (EditText)findViewById(R.id.courseName);
 
         mainPicker.setSelectedColor(Color.parseColor("#F44336"));
         subPicker.setColors(MaterialColorPalette.RED);
         subPicker.setSelectedColor(Color.parseColor("#F44336"));
-        circleShape.setColor(Color.parseColor("#F44336"));
 
         mainPicker.setOnColorChangedListener(new OnColorChangedListener() {
             @Override
@@ -70,7 +93,8 @@ public class AddCoursePopup extends Dialog {
         subPicker.setOnColorChangedListener(new OnColorChangedListener() {
             @Override
             public void onColorChanged(int c) {
-                circleShape.setColor(Color.parseColor(subPicker.getHexColor()));
+                header.setTextColor(Color.parseColor(subPicker.getHexColor()));
+                name.getBackground().mutate().setColorFilter(Color.parseColor(subPicker.getHexColor()), PorterDuff.Mode.SRC_ATOP);
             }
         });
     }

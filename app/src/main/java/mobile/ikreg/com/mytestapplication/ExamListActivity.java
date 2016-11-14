@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import mobile.ikreg.com.mytestapplication.database.CourseDataSource;
+import mobile.ikreg.com.mytestapplication.database.CourseMemory;
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
 import mobile.ikreg.com.mytestapplication.util.DateHelper;
@@ -38,7 +40,8 @@ import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
 public class ExamListActivity extends AppCompatActivity {
 
-    private ExamDataSource dataSource = new ExamDataSource(this);
+    private ExamDataSource examSource = new ExamDataSource(this);
+    private CourseDataSource courseSource = new CourseDataSource(this);
     public static final String LOG_TAG = ExamListActivity.class.getSimpleName();
     private List<ExamMemory> examList;
     private ExamListAdapter adapter;
@@ -51,12 +54,15 @@ public class ExamListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dataSource.open();
+        examSource.open();
+        courseSource.open();
+        Log.i(LOG_TAG, "ExamSource and CourseSource opened.");
 
         this.examList = getExamList();
         this.adapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examList);
         this.listView = (ListView) findViewById(R.id.list_view);
         showListEntries();
+        List<CourseMemory> testList = courseSource.getActiveCourseMemos();
 
         listView.setClickable(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,7 +95,7 @@ public class ExamListActivity extends AppCompatActivity {
                         AlertDialog.Builder deleteDialog = new AlertDialog.Builder(ExamListActivity.this);
                         deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(false).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                dataSource.deleteExam(clickedExam);
+                                examSource.deleteExam(clickedExam);
                                 updateExamList(listView);
                                 dialog.cancel();
 
@@ -167,48 +173,15 @@ public class ExamListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.i(LOG_TAG, "Die Datenquelle wird geöffnet.");
-        //dataSource.open();
-        //showAllListEntries();
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        Log.i(LOG_TAG, "Die Datenquelle wird geschlossen.");
-        dataSource.close();
-    }
-
-    private void showAllListEntries () {
-        final List<ExamMemory> examMemoList = getExamList();
-        final ListView listViewExams = (ListView) findViewById(R.id.list_view);
-
-        final ExamListAdapter examArrayAdapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examMemoList);
-        listViewExams.setAdapter(examArrayAdapter);
-
-        final ExamMemory date = DateHelper.getDateExpired(examMemoList);
-
-        if(date != null && !ParseHelper.getExpirationBool(date)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(false
-            ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dataSource.deleteExam(date);
-                    updateExamList(listViewExams);
-                    dialog.cancel();
-                }
-            }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dataSource.updateExpired(date, 1);
-                    dialog.cancel();
-                    TextView tv = (TextView)findViewById(R.id.exam_list_daysleft);
-                    tv.setText(" - expired");
-                }
-            }).create().show();
-        }
+        Log.i(LOG_TAG, "Die Datenquellen werden geschlossen.");
+        courseSource.close();
+        examSource.close();
     }
 
     private void showListEntries () {
@@ -222,13 +195,13 @@ public class ExamListActivity extends AppCompatActivity {
             builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(false
             ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    dataSource.deleteExam(date);
+                    examSource.deleteExam(date);
                     updateExamList(listView);
                     dialog.cancel();
                 }
             }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    dataSource.updateExpired(date, 1);
+                    examSource.updateExpired(date, 1);
                     dialog.cancel();
                     TextView tv = (TextView)findViewById(R.id.exam_list_daysleft);
                     tv.setText(" - expired");
@@ -244,7 +217,7 @@ public class ExamListActivity extends AppCompatActivity {
     }
 
     private List<ExamMemory> getExamList() {
-        List<ExamMemory> list = dataSource.getActiveExamMemos();
+        List<ExamMemory> list = examSource.getActiveExamMemos();
         Collections.sort(list, new Comparator<ExamMemory>() {
             @Override
             public int compare(final ExamMemory object1, final ExamMemory object2) {

@@ -17,7 +17,7 @@ public class ExamDataSource {
     private SQLiteDatabase database;
     private MemoryHelper dbHelper;
     private String[] columns = {MemoryHelper.KEY_ID, MemoryHelper.EXAM_DATE, MemoryHelper.EXAM_TIME,
-                                MemoryHelper.EXAM_COURSE, MemoryHelper.EXAM_ROOM, MemoryHelper.EXAM_LENGTH,
+                                MemoryHelper.EXAM_COURSE_ID, MemoryHelper.EXAM_ROOM, MemoryHelper.EXAM_LENGTH,
                                 MemoryHelper.EXAM_NOTIFIC, MemoryHelper.EXAM_NOTES, MemoryHelper.EXAM_EXPIRED};
 
 
@@ -27,9 +27,8 @@ public class ExamDataSource {
     }
 
     public void open() {
-        Log.i(LOG_TAG, "Eine Referenz auf die Datenbank wird jetzt angefragt.");
         database = dbHelper.getWritableDatabase();
-        Log.i(LOG_TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: " + database.getPath());
+        Log.i("Database", "Exam DataBase: " + database);
     }
 
     public void close() {
@@ -37,11 +36,11 @@ public class ExamDataSource {
         Log.i(LOG_TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public ExamMemory createShoppingMemo(long date, String time, String course, long room, long length, String notific, String notes, long expired) {
+    public ExamMemory createShoppingMemo(long date, String time, long course_id, long room, long length, String notific, String notes, long expired) {
         ContentValues values = new ContentValues();
         values.put(MemoryHelper.EXAM_DATE, date);
         values.put(MemoryHelper.EXAM_TIME, time);
-        values.put(MemoryHelper.EXAM_COURSE, course);
+        values.put(MemoryHelper.EXAM_COURSE_ID, course_id);
         values.put(MemoryHelper.EXAM_ROOM, room);
         values.put(MemoryHelper.EXAM_LENGTH, length);
         values.put(MemoryHelper.EXAM_NOTIFIC, notific);
@@ -65,7 +64,7 @@ public class ExamDataSource {
         int idIndex = cursor.getColumnIndex(MemoryHelper.KEY_ID);
         int idDate = cursor.getColumnIndex(MemoryHelper.EXAM_DATE);
         int idTime = cursor.getColumnIndex(MemoryHelper.EXAM_TIME);
-        int idCourse = cursor.getColumnIndex(MemoryHelper.EXAM_COURSE);
+        int idCourse = cursor.getColumnIndex(MemoryHelper.EXAM_COURSE_ID);
         int idRoom = cursor.getColumnIndex(MemoryHelper.EXAM_ROOM);
         int idLength = cursor.getColumnIndex(MemoryHelper.EXAM_LENGTH);
         int idNotific = cursor.getColumnIndex(MemoryHelper.EXAM_NOTIFIC);
@@ -74,7 +73,7 @@ public class ExamDataSource {
 
         long date = cursor.getLong(idDate);
         String time = cursor.getString(idTime);
-        String course = cursor.getString(idCourse);
+        long course_id = cursor.getLong(idCourse);
         long room = cursor.getLong(idRoom);
         long length = cursor.getLong(idLength);
         String notific = cursor.getString(idNotific);
@@ -82,10 +81,11 @@ public class ExamDataSource {
         long expired = cursor.getLong(idExpired);
         long id = cursor.getLong(idIndex);
 
-        return new ExamMemory(date, time, course, room, length, notific, notes, expired, id);
+        return new ExamMemory(date, time, course_id, room, length, notific, notes, expired, id);
     }
 
     public List<ExamMemory> getActiveExamMemos() {
+
         List<ExamMemory> examMemoList = new ArrayList<>();
 
         Cursor cursor = database.query(MemoryHelper.TABLE_EXAM_LIST,
@@ -102,6 +102,7 @@ public class ExamDataSource {
         }
 
         cursor.close();
+        //db.close();
 
         return examMemoList;
     }
@@ -112,11 +113,11 @@ public class ExamDataSource {
         database.delete(MemoryHelper.TABLE_EXAM_LIST, MemoryHelper.KEY_ID + "=" + id, null);
     }
 
-    public ExamMemory updateExamMemory(long id, long date, String time, String course, long room, long length, String notific, String notes, long expired) {
+    public ExamMemory updateExamMemory(long id, long date, String time, long course_id, long room, long length, String notific, String notes, long expired) {
         ContentValues values = new ContentValues();
         values.put(MemoryHelper.EXAM_DATE, date);
         values.put(MemoryHelper.EXAM_TIME, time);
-        values.put(MemoryHelper.EXAM_COURSE, course);
+        values.put(MemoryHelper.EXAM_COURSE_ID, course_id);
         values.put(MemoryHelper.EXAM_ROOM, room);
         values.put(MemoryHelper.EXAM_LENGTH, length);
         values.put(MemoryHelper.EXAM_NOTIFIC, notific);

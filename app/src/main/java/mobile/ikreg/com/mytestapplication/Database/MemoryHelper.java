@@ -1,9 +1,14 @@
 package mobile.ikreg.com.mytestapplication.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemoryHelper extends SQLiteOpenHelper{
 
@@ -19,7 +24,8 @@ public class MemoryHelper extends SQLiteOpenHelper{
     //ExamMemory Table
     public static final String EXAM_DATE = "date";
     public static final String EXAM_TIME = "time";
-    public static final String EXAM_COURSE = "course";
+    //public static final String EXAM_COURSE = "course";
+    public static final String EXAM_COURSE_ID = "course_id";
     public static final String EXAM_ROOM = "room";
     public static final String EXAM_LENGTH = "length";
     public static final String EXAM_NOTIFIC = "notific";
@@ -34,7 +40,7 @@ public class MemoryHelper extends SQLiteOpenHelper{
             KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             EXAM_DATE + " INTEGER NOT NULL, " +
             EXAM_TIME + " TEXT NOT NULL, " +
-            EXAM_COURSE + " TEXT NOT NULL, " +
+            EXAM_COURSE_ID + " INTEGER NOT NULL, " +
             EXAM_ROOM + " INTEGER NOT NULL, " +
             EXAM_LENGTH + " INTEGER NOT NULL, " +
             EXAM_NOTIFIC + " TEXT , " +
@@ -43,8 +49,8 @@ public class MemoryHelper extends SQLiteOpenHelper{
 
     public static final String CREATE_TABLE_COURSE = "CREATE TABLE " + TABLE_COURSE_LIST + "(" +
             KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COURSE_NAME + "TEXT NOT NULL, " +
-            COURSE_COLOR + "INTEGER NOT NULL " + ")";
+            COURSE_NAME + " TEXT , " +
+            COURSE_COLOR + " INTEGER NOT NULL " + ")";
 
 
     public MemoryHelper(Context context) {

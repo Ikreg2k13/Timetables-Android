@@ -30,8 +30,7 @@ public class ParseHelper {
             SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.US);
             Date date = sdf.parse(dateString);
 
-            long parsedLong = date.getTime();
-            return parsedLong;
+            return date.getTime();
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -41,9 +40,8 @@ public class ParseHelper {
     }
 
     public static String parseLongDateToString(long dateLong) {
-        String dateString = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.US).format(new Date(dateLong));
 
-        return dateString;
+        return new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.US).format(new Date(dateLong));
     }
 
     public static long parseTimeStringToLong(String timeString) {
@@ -51,8 +49,7 @@ public class ParseHelper {
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.US);
             Date date = sdf.parse(timeString);
 
-            long parsedLong = date.getTime();
-            return parsedLong;
+            return date.getTime();
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -61,9 +58,8 @@ public class ParseHelper {
     }
 
     public static String parseTimeLongToString(long timeLong) {
-        String timeString = new SimpleDateFormat("hh:mm a", Locale.US).format(new Date(timeLong));
 
-        return timeString;
+        return new SimpleDateFormat("hh:mm a", Locale.US).format(new Date(timeLong));
     }
 
     public static boolean getExpirationBool(ExamMemory exam) {
@@ -76,6 +72,7 @@ public class ParseHelper {
             case 1: b = true;
             break;
         }
+
         return b;
     }
 }

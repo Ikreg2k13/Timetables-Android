@@ -1,24 +1,24 @@
 package mobile.ikreg.com.mytestapplication;
 
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
+import mobile.ikreg.com.mytestapplication.database.CourseDataSource;
+import mobile.ikreg.com.mytestapplication.database.CourseMemory;
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
 import mobile.ikreg.com.mytestapplication.util.AddExamSpinnerAdapter;
 import mobile.ikreg.com.mytestapplication.util.dialog.AddCoursePopup;
@@ -30,6 +30,7 @@ public class ExamAddActivity extends AppCompatActivity {
 
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
     ExamDataSource dataSource = new ExamDataSource(this);
+    CourseDataSource courseSource = new CourseDataSource(this);
     public static final String LOG_TAG = ExamAddActivity.class.getSimpleName();
 
     @Override
@@ -39,6 +40,9 @@ public class ExamAddActivity extends AppCompatActivity {
 
         DatePopup setDate = new DatePopup(ExamAddActivity.this, (EditText)findViewById(R.id.editDate), (LinearLayout)findViewById(R.id.layoutDate));
         TimePopup setTime = new TimePopup(ExamAddActivity.this, (EditText)findViewById(R.id.editTime), (LinearLayout)findViewById(R.id.layoutTime));
+
+        dataSource.open();
+        courseSource.open();
 
         setSpinnerItems();
     }
@@ -56,7 +60,7 @@ public class ExamAddActivity extends AppCompatActivity {
         addCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddCoursePopup addCourse = new AddCoursePopup(ExamAddActivity.this);
+                AddCoursePopup addCourse = new AddCoursePopup(ExamAddActivity.this, courseSource);
                 addCourse.show();
             }
         });
@@ -66,7 +70,7 @@ public class ExamAddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String dateString = editDate.getText().toString();
                 String timeString = editTime.getText().toString();
-                String courseString = spinnerCourse.getSelectedItem().toString();
+                //String course_id = spinnerCourse.getSelectedItem().toString();
                 String roomString = editRoom.getText().toString();
                 String lengthString = editLength.getText().toString();
 
@@ -95,11 +99,12 @@ public class ExamAddActivity extends AppCompatActivity {
                     return;
                 }
 
+                long course_id = spinnerCourse.getSelectedItemPosition() + 1;
                 long roomLong = Long.parseLong(editRoom.getText().toString());
                 long lengthLong = Long.parseLong(editLength.getText().toString());
                 long dateLong = ParseHelper.parseDateStringToLong(dateString);
 
-                dataSource.createShoppingMemo(dateLong, timeString, courseString, roomLong, lengthLong, null, null, 0);
+                dataSource.createShoppingMemo(dateLong, timeString, course_id, roomLong, lengthLong, null, null, 0);
 
                 Intent intent = new Intent(ExamAddActivity.this, ExamListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -118,9 +123,9 @@ public class ExamAddActivity extends AppCompatActivity {
 
     public void setSpinnerItems() {
         Spinner courseSpinner = (Spinner)findViewById(R.id.spinnerCourse);
-        String[] testArray = {"English", "German", "Maths", "Politics", "Add Course"};
-        ArrayAdapter<String> testAdapter = new AddExamSpinnerAdapter(this, R.layout.adapter_coursespinner, testArray);
-        testAdapter.setDropDownViewResource(R.layout.adapter_coursespinner);
+        List<CourseMemory> courseList = courseSource.getActiveCourseMemos();
+        ArrayAdapter<CourseMemory> testAdapter = new AddExamSpinnerAdapter(this, R.layout.adapter_coursespinner_dropdown, courseList);
+        testAdapter.setDropDownViewResource(R.layout.adapter_coursespinner_dropdown);
         courseSpinner.setAdapter(testAdapter);
     }
 
@@ -129,7 +134,8 @@ public class ExamAddActivity extends AppCompatActivity {
         super.onResume();
 
         Log.i(LOG_TAG, "Die Datenquelle im Add wird geöffnet.");
-        dataSource.open();
+        //dataSource.open();
+        //courseSource.open();
         onButtonPressed();
     }
 
@@ -139,5 +145,6 @@ public class ExamAddActivity extends AppCompatActivity {
 
         Log.i(LOG_TAG, "Die Datenquelle wird im Add geschlossen.");
         dataSource.close();
+        courseSource.close();
     }
 }

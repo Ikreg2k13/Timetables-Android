@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:text="Set a Course Name"
+        android:text="Add a course"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:id="@+id/textView2"
@@ -15,38 +15,26 @@
         android:gravity="center_horizontal"
         android:layout_marginBottom="12dp"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <TextView
+        android:text="Course name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/courseNameText"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/colorAccent"/>
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:weightSum="6"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/courseName"
+        android:textSize="16sp"
         android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp">
-
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:inputType="textPersonName"
-            android:hint="Course"
-            android:ems="10"
-            android:id="@+id/editText"
-            android:layout_weight="6"
-            android:textSize="16sp" />
-
-        <View
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/universal_circle_view"
-            android:id="@+id/selectedColor"
-            android:layout_marginTop="7dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp"/>
-    </LinearLayout>
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"/>
 
     <TextView
         android:text="Select a Color"

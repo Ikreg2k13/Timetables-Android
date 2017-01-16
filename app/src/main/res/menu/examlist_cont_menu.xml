@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/examlist_cont_menu" >
+        <item
+            android:id="@+id/examlist_cont_edit"
+            android:icon="@drawable/ic_edit"
+            app:showAsAction="ifRoom"
+            android:title="Edit"
+            android:orderInCategory="1">
+        </item>
+
+        <item
+            android:id="@+id/examlist_cont_delete"
+            android:icon="@drawable/ic_deletebutton"
+            app:showAsAction="ifRoom"
+            android:title="Delete"
+            android:orderInCategory="2">
+        </item>
+    </group>
+
+</menu>

@@ -46,7 +46,7 @@ public class ExamMemory {
         this.time = time;
     }
 
-    public long getCourse() {return course_id; }
+    public long getCourseId() {return course_id; }
     //public void setCourse(int course) { this.course_id = course; }
 
     public long getRoom() { return room; }

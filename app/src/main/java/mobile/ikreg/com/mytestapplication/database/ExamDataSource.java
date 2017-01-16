@@ -36,7 +36,7 @@ public class ExamDataSource {
         Log.i(LOG_TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public ExamMemory createShoppingMemo(long date, String time, long course_id, long room, long length, String notific, String notes, long expired) {
+    public ExamMemory createExamMemo(long date, String time, long course_id, long room, long length, String notific, String notes, long expired) {
         ContentValues values = new ContentValues();
         values.put(MemoryHelper.EXAM_DATE, date);
         values.put(MemoryHelper.EXAM_TIME, time);

@@ -3,6 +3,7 @@ package mobile.ikreg.com.mytestapplication.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +17,11 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import mobile.ikreg.com.mytestapplication.ExamListActivity;
@@ -32,6 +36,7 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
     private Context context;
     private List<ExamMemory> examList;
     private int layoutResourceId;
+    private HashMap<Integer, Boolean> selection = new HashMap<Integer, Boolean>();
 
     public ExamListAdapter(Context context, int layoutResourceId, List<ExamMemory> list) {
         super(context, layoutResourceId, list);
@@ -64,8 +69,8 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
         TextView room = (TextView)convertView.findViewById(R.id.exam_list_room);
         View color = convertView.findViewById(R.id.colorView);
 
-        course.setText(courseSource.getCourseById(this.examList.get(position).getCourse()).getName());
-        color.setBackgroundColor((int) courseSource.getCourseById(this.examList.get(position).getCourse()).getColor());
+        course.setText(courseSource.getCourseById(this.examList.get(position).getCourseId()).getName());
+        color.setBackgroundColor((int) courseSource.getCourseById(this.examList.get(position).getCourseId()).getColor());
         date.setText(ParseHelper.parseLongDateToString(this.examList.get(position).getDate()));
         time.setText(this.examList.get(position).getTime());
         if(this.examList.get(position).getExpired() == 0)
@@ -74,5 +79,33 @@ public class ExamListAdapter extends ArrayAdapter<ExamMemory> {
         room.setText("R " + ParseHelper.parseLongToString(3, this.examList.get(position).getRoom()));
 
         return convertView;
+    }
+
+    public void setNewSelection(int position, boolean value) {
+        selection.put(position, value);
+        notifyDataSetChanged();
+    }
+
+    public boolean isPositionChecked(int position) {
+        Boolean result = selection.get(position);
+        return result == null ? false : result;
+    }
+
+    public Set<Integer> getCurrentCheckedPosition() {
+        return selection.keySet();
+    }
+
+    public void removeSelection(int position) {
+        selection.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void clearSelection() {
+        selection = new HashMap<Integer, Boolean>();
+        notifyDataSetChanged();
+    }
+
+    public int getHMapSize() {
+        return selection.size();
     }
 }

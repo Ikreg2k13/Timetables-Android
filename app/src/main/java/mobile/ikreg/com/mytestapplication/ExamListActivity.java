@@ -1,44 +1,40 @@
 package mobile.ikreg.com.mytestapplication;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import mobile.ikreg.com.mytestapplication.database.CourseDataSource;
-import mobile.ikreg.com.mytestapplication.database.CourseMemory;
 import mobile.ikreg.com.mytestapplication.database.ExamMemory;
 import mobile.ikreg.com.mytestapplication.database.ExamDataSource;
 import mobile.ikreg.com.mytestapplication.util.DateHelper;
 import mobile.ikreg.com.mytestapplication.util.ExamListAdapter;
 import mobile.ikreg.com.mytestapplication.util.ParseHelper;
 
-public class ExamListActivity extends AppCompatActivity {
+@SuppressWarnings("serial")
+public class ExamListActivity extends AppCompatActivity implements Serializable {
 
     private ExamDataSource examSource = new ExamDataSource(this);
     private CourseDataSource courseSource = new CourseDataSource(this);
@@ -46,12 +42,13 @@ public class ExamListActivity extends AppCompatActivity {
     private List<ExamMemory> examList;
     private ExamListAdapter adapter;
     private ListView listView;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_examlist);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         examSource.open();
@@ -61,56 +58,99 @@ public class ExamListActivity extends AppCompatActivity {
         this.examList = getExamList();
         this.adapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examList);
         this.listView = (ListView) findViewById(R.id.list_view);
+        listView.setLongClickable(true);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setEmptyView(findViewById(R.id.examlist_empty));
         showListEntries();
-        List<CourseMemory> testList = courseSource.getActiveCourseMemos();
 
-        listView.setClickable(true);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                final View view1 = view;
-                final ImageButton delete = (ImageButton)view1.findViewById(R.id.delete_button);
-                final ExamMemory clickedExam = examList.get(pos);
-                int openItemId = getOpenItemId(examList);
-                View openView = listView.getChildAt(openItemId);
+            public void onDestroyActionMode(ActionMode mode) {
+                for(int i = 0; i < examList.size(); i++) {
+                    if(adapter.isPositionChecked(i)) listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                }
+                adapter.clearSelection();
+            }
+            int nr = 0;
 
-                if(delete.getVisibility() == View.INVISIBLE) {
-                    openAnimation(view1);
-                    if(openItemId != -1) {
-                        closeAnimation(openView);
-                        if(getOpenItem(examList) != null) {
-                            getOpenItem(examList).setClosed();
-                        }
-                    }
-                    clickedExam.setOpen();
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                if(checked) {
+                    nr++;
+                    adapter.setNewSelection(position, checked);
+                    listView.getChildAt(position).setBackgroundColor(Color.parseColor("#E0E0E0"));
                 }
                 else {
-                    closeAnimation(view1);
-                    clickedExam.setClosed();
+                    nr--;
+                    adapter.removeSelection(position);
+                    listView.getChildAt(position).setBackgroundColor(Color.TRANSPARENT);
                 }
+                if(nr > 1) findViewById(R.id.examlist_cont_edit).setVisibility(View.GONE);
+                else findViewById(R.id.examlist_cont_edit).setVisibility(View.VISIBLE);
+                mode.setTitle(nr + " selected");
+            }
 
-                delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(ExamListActivity.this);
-                        deleteDialog.setMessage("Do you really want to delete this item?").setCancelable(false).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                nr = 0;
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.examlist_cont_menu, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.examlist_cont_delete:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ExamListActivity.this);
+
+                        builder.setMessage("Delete " + nr + " exams?").setCancelable(true
+                        ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                examSource.deleteExam(clickedExam);
-                                updateExamList(listView);
+                                for(Integer key : adapter.getCurrentCheckedPosition()) {
+                                    listView.getChildAt(key).setBackgroundColor(Color.TRANSPARENT);
+                                    deleteExam(key);
+                                }
                                 dialog.cancel();
-
+                                nr = 0;
+                                adapter.clearSelection();
+                                mode.finish();
                             }
                         }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                closeAnimation(view1);
-                                if(getOpenItem(examList) != null) {
-                                    getOpenItem(examList).setClosed();
-                                }
                             }
                         }).create().show();
-                    }
-                });
+                        break;
+                    case R.id.examlist_cont_edit:
+                        int pos = (int) adapter.getCurrentCheckedPosition().toArray()[0];
+                        ExamMemory exam = examList.get(pos);
+                        String[] data = {Long.toString(exam.getId()), Long.toString(exam.getDate()), exam.getTime(), Long.toString(exam.getCourseId()), Long.toString(exam.getRoom()), Long.toString(exam.getLength()), exam.getNotific(), exam.getNotes(), "edit"};
+                        Intent intent = new Intent(ExamListActivity.this, ExamAddActivity.class);
+                        intent.putExtra("editData", data);
+                        startActivity(intent);
+
+                        nr = 0;
+                        listView.getChildAt(pos).setBackgroundColor(Color.TRANSPARENT);
+                        adapter.clearSelection();
+                        mode.finish();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                listView.setItemChecked(position, !adapter.isPositionChecked(position));
+                return false;
             }
         });
 
@@ -123,51 +163,26 @@ public class ExamListActivity extends AppCompatActivity {
         });
     }
 
-    private int getOpenItemId(List<ExamMemory> list) {
-        for(ExamMemory exam : list) {
-            if(exam.isOpen()) return list.indexOf(exam);
+    //MenuInflator for Toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.exam_list_menu, menu);
+        return true;
+    }
+
+    //Handle MenuSelection in Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch(id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.exam_delete:
+                return true;
         }
-        return -1;
-    }
 
-    private ExamMemory getOpenItem(List<ExamMemory> list) {
-        for(ExamMemory exam : list) {
-            if(exam.isOpen()) return exam;
-        }
-        return null;
-    }
-
-    private void openAnimation(View view) {
-        final ImageButton delete = (ImageButton) view.findViewById(R.id.delete_button);
-            ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -150f);
-            translateList.setDuration(120);
-            translateList.setInterpolator(new AccelerateDecelerateInterpolator());
-            translateList.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    delete.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-
-                }
-            });
-            translateList.start();
-    }
-
-    private void closeAnimation(View view) {
-        final ImageButton delete = (ImageButton) view.findViewById(R.id.delete_button);
-        ObjectAnimator translateList = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f);
-        translateList.setDuration(120);
-        translateList.setInterpolator(new AccelerateDecelerateInterpolator());
-        translateList.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                delete.setVisibility(View.INVISIBLE);
-            }
-        });
-        translateList.start();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -192,28 +207,33 @@ public class ExamListActivity extends AppCompatActivity {
         if(date != null && !ParseHelper.getExpirationBool(date)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setMessage(date.getCourse() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(false
+            builder.setMessage(date.getCourseId() + " exam from " + ParseHelper.parseLongDateToString(date.getDate()) + " has expired. Do you want to delete it?").setCancelable(false
             ).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    examSource.deleteExam(date);
-                    updateExamList(listView);
+                    deleteExam(date);
                     dialog.cancel();
+                    showListEntries();
                 }
             }).setNegativeButton("Keep", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     examSource.updateExpired(date, 1);
                     dialog.cancel();
-                    TextView tv = (TextView)findViewById(R.id.exam_list_daysleft);
-                    tv.setText(" - expired");
+                    showListEntries();
                 }
             }).create().show();
         }
     }
 
-    private void updateExamList(ListView listView) {
-        this.examList = getExamList();
-        ExamListAdapter changedAdapter = new ExamListAdapter(this, R.layout.adapter_examlist_two, examList);
-        listView.setAdapter(changedAdapter);
+    private void deleteExam(ExamMemory exam) {
+        examSource.deleteExam(exam);
+        examList.remove(exam);
+        adapter.remove(exam);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void deleteExam(int position) {
+        ExamMemory exam = examList.get(position);
+        deleteExam(exam);
     }
 
     private List<ExamMemory> getExamList() {

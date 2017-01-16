@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_exam) {
             startActivity(new Intent(this, ExamListActivity.class));
-            //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         } else if (id == R.id.nav_timetable) {
             startActivity(new Intent(this, ColorPickerActivity.class));
         } else if (id == R.id.nav_manage) {
